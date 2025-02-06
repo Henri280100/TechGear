@@ -1,7 +1,11 @@
-import LandingPage from "./landing/page";
+import HeaderHero from "./landing/page";
+import ProductList from "./product_list/page";
 
 export default function Home() {
   return (
-    <LandingPage/>
+    <>
+      <HeaderHero />
+      <ProductList />
+    </>
   );
 }

@@ -3,11 +3,16 @@ import {motion, AnimatePresence} from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Info, Monitor, ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { FeatureCardType } from "@/app/types/FeatureCard";
+import { FeatureCardType } from "@/app/types/FeatureCard.types";
 
 const Hero = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-  
+
+    const handleScroll = () => {
+      const mainSection = document.getElementById("main-section");
+      if (mainSection) mainSection.scrollIntoView({ behavior: "smooth" });
+    }
+
     useEffect(() => {
       setIsLoaded(true);
   
@@ -133,7 +138,7 @@ const Hero = () => {
             transition={{ delay: 1.2, duration: 0.8 }}
             className="flex justify-center mt-16"
           >
-            <ChevronDown className="text-white animate-bounce" size={24}/>
+            <ChevronDown onClick={handleScroll} className="text-white animate-bounce" size={24}/>
           </motion.div>
         </div>
       </div>
@@ -159,6 +164,8 @@ const Hero = () => {
           src={image}
           alt={title}
           className="object-cover w-full h-48 transition-transform duration-300 hover:scale-110"
+          width={500}
+          height={300}
         />
         {saleTag && (
           <div className="absolute top-0 right-0 px-4 py-2 text-white bg-red-600 rounded-bl-lg">

@@ -5,7 +5,7 @@ import { ChevronDown, Info, Monitor, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { FeatureCardType } from "@/app/types/FeatureCard.types";
 
-const Hero = () => {
+const HeroSection = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const handleScroll = () => {
@@ -184,4 +184,4 @@ const Hero = () => {
     </motion.div>
   );
 
-export default Hero;
+export default HeroSection;

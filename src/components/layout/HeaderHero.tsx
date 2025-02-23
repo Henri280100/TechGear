@@ -11,6 +11,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useMobileMenu } from "@/hooks/useMobileMenu";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -26,9 +27,8 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useMobileMenu } from "../hooks/useMobileMenu";
-import HeroSection from "./components/Hero";
+import React, { useEffect, useRef, useState } from "react";
+import HeroSection from "./Hero";
 
 interface BottomNavItemProps {
   href: string;
@@ -42,6 +42,17 @@ export default function HeaderHero() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollY, setScrollY] = useState(0);
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutSideClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current?.contains(e.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutSideClick);
+    return () => document.removeEventListener("mousedown", handleOutSideClick);
+  }, [ref]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -256,6 +267,7 @@ export default function HeaderHero() {
           <AnimatePresence>
             {isSearchOpen && (
               <motion.div
+                ref={ref}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}

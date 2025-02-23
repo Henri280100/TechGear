@@ -46,6 +46,7 @@
     "react-intersection-observer": "^9.15.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "techgear-client": "file:",
     "vaul": "^1.1.2",
     "zod": "^3.24.1"
   },

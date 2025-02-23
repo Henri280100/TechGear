@@ -1,5 +1,6 @@
 "use client";
 
+import HeaderHero from "@/components/layout/HeaderHero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,10 +49,8 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
-import { FC, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { FadeInSection } from "../product_list/components/FadeInSection";
-import { ProductsWithoutSensitiveData } from "../types/product.types";
 
 const gamingPCs = [
   {
@@ -269,11 +268,36 @@ const upcomingProducts = [
   },
 ];
 
+const FadeInSection = ({ children }) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [controls, inView]);
 
+  return (
+    <motion.div
+      ref={ref}
+      animate={controls}
+      initial="hidden"
+      transition={{ duration: 0.5 }}
+      variants={{
+        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 50 },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
-
-const ProductSection: FC<ProductsWithoutSensitiveData> = ({ title, products }) => (
+const ProductSection = ({ title, products }) => (
   <section className="mb-12">
     <div className="flex justify-between items-center mb-6">
       <h2 className="text-2xl font-bold">{title}</h2>
@@ -287,9 +311,10 @@ const ProductSection: FC<ProductsWithoutSensitiveData> = ({ title, products }) =
               <Image
                 src={product.image}
                 alt={product.name}
+                width={500}
+                height={300}
+                quality={100}
                 className="w-full h-32 object-cover"
-                width={100}
-                height={32}
               />
               <Badge className="absolute top-1 right-1 text-xs bg-primary text-primary-foreground">
                 New
@@ -339,11 +364,11 @@ const ProductSection: FC<ProductsWithoutSensitiveData> = ({ title, products }) =
   </section>
 );
 
-export default function LandingPage() {
-  const [isMounted, setIsMounted] = useState(false);
+export default function Landing() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const plugins = useRef(
     Autoplay({
       delay: 3000,
@@ -357,6 +382,8 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     const handleResize = () => {
       if (categoryCarouselRef.current) {
         categoryCarouselRef.current.scrollTo({
@@ -368,415 +395,427 @@ export default function LandingPage() {
     };
 
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMounted]); // Run effect only after component mounts
+
+  if (!isMounted) return null; // Prevents hydration issues
 
   return (
-    <div ref={categoryCarouselRef}>
-      {isMounted && (
-        <div className="container mx-auto px-4 py-8 bg-gray-50">
-          <FadeInSection>
-            <nav className="mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center space-x-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="md:hidden"
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  >
-                    {isMobileMenuOpen ? (
-                      <X className="h-6 w-6" />
-                    ) : (
-                      <Menu className="h-6 w-6" />
-                    )}
-                    <span className="sr-only">
-                      {isMobileMenuOpen ? "Close menu" : "Open menu"}
-                    </span>
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-48 justify-between hidden md:flex"
-                      >
-                        <span>Categories</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {categories.map((category, index) => (
-                        <DropdownMenuItem key={index}>
-                          {category.icon()}
-                          {category.name}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-40 justify-between hidden md:flex"
-                      >
-                        <span>New Product</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem>Latest Arrivals</DropdownMenuItem>
-                      <DropdownMenuItem>Trending</DropdownMenuItem>
-                      <DropdownMenuItem>Seasonal</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <AnimatePresence>
-                    {(isSearchOpen || window.innerWidth > 768) && (
-                      <motion.div
-                        initial={{ width: 0, opacity: 0 }}
-                        animate={{ width: "auto", opacity: 1 }}
-                        exit={{ width: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="relative"
-                      >
-                        <Input
-                          type="search"
-                          placeholder="Search..."
-                          className="pl-8 w-full md:w-auto"
-                        />
-                        <Search className="h-4 w-4 absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  {!isSearchOpen && window.innerWidth <= 768 && (
+    <>
+      <HeaderHero />
+      <div ref={categoryCarouselRef}>
+        {isMounted && (
+          <div className="container mx-auto px-4 py-8 bg-gray-50">
+            <FadeInSection>
+              <nav className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center space-x-4">
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => setIsSearchOpen(true)}
+                      className="md:hidden"
+                      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     >
-                      <Search className="h-4 w-4" />
-                      <span className="sr-only">Search</span>
+                      {isMobileMenuOpen ? (
+                        <X className="h-6 w-6" />
+                      ) : (
+                        <Menu className="h-6 w-6" />
+                      )}
+                      <span className="sr-only">
+                        {isMobileMenuOpen ? "Close menu" : "Open menu"}
+                      </span>
                     </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="hidden md:inline-flex"
-                  >
-                    About
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="hidden md:inline-flex"
-                  >
-                    FAQs
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <ShoppingCart className="h-4 w-4" />
-                    <span className="sr-only">Cart</span>
-                  </Button>
-                </div>
-              </div>
-
-              <AnimatePresence>
-                {isMobileMenuOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="md:hidden"
-                  >
-                    <div className="flex flex-col space-y-2 py-4">
-                      <Button variant="outline" className="justify-between">
-                        <span>Categories</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" className="justify-between">
-                        <span>New Product</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost">About</Button>
-                      <Button variant="ghost">FAQs</Button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="flex justify-between items-center mt-4">
-                <h2 className="text-sm font-semibold">Catalogs</h2>
-                <Drawer open={isOpen} onOpenChange={setIsOpen}>
-                  <DrawerTrigger asChild>
-                    <Button variant="link" size="sm">
-                      View all
-                    </Button>
-                  </DrawerTrigger>
-                  <DrawerContent>
-                    <DrawerHeader>
-                      <DrawerTitle>All Tech Categories</DrawerTitle>
-                      <DrawerDescription>
-                        Browse our full range of tech product categories.
-                      </DrawerDescription>
-                    </DrawerHeader>
-                    <ScrollArea className="h-[50vh] px-4">
-                      {categories.map((category, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center p-2 hover:bg-muted rounded-lg cursor-pointer"
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-48 justify-between hidden md:flex"
                         >
-                          {category.icon()}
-                          <span>{category.name}</span>
-                        </div>
-                      ))}
-                    </ScrollArea>
-                    <DrawerFooter>
-                      <DrawerClose asChild>
-                        <Button variant="outline">Close</Button>
-                      </DrawerClose>
-                    </DrawerFooter>
-                  </DrawerContent>
-                </Drawer>
-              </div>
-              <Carousel
-                ref={categoryCarouselRef}
-                className="w-full mt-2"
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-              >
-                <CarouselContent>
-                  {categories.map((category, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
-                    >
-                      <Button variant="outline" size="sm" className="w-full">
-                        {category.name}
+                          <span>Categories</span>
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {categories.map((category, index) => (
+                          <DropdownMenuItem key={index}>
+                            {category.icon()}
+                            {category.name}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-40 justify-between hidden md:flex"
+                        >
+                          <span>New Product</span>
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem>Latest Arrivals</DropdownMenuItem>
+                        <DropdownMenuItem>Trending</DropdownMenuItem>
+                        <DropdownMenuItem>Seasonal</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <AnimatePresence>
+                      {(isSearchOpen || window.innerWidth > 768) && (
+                        <motion.div
+                          initial={{ width: 0, opacity: 0 }}
+                          animate={{ width: "auto", opacity: 1 }}
+                          exit={{ width: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="relative"
+                        >
+                          <Input
+                            type="search"
+                            placeholder="Search..."
+                            className="pl-8 w-full md:w-auto"
+                          />
+                          <Search className="h-4 w-4 absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    {!isSearchOpen && window.innerWidth <= 768 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsSearchOpen(true)}
+                      >
+                        <Search className="h-4 w-4" />
+                        <span className="sr-only">Search</span>
                       </Button>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="flex justify-center mt-5">
-                  <CarouselPrevious className="relative inset-auto mr-2" />
-                  <CarouselNext className="relative inset-auto" />
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden md:inline-flex"
+                    >
+                      About
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden md:inline-flex"
+                    >
+                      FAQs
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <ShoppingCart className="h-4 w-4" />
+                      <span className="sr-only">Cart</span>
+                    </Button>
+                  </div>
                 </div>
-              </Carousel>
-            </nav>
-          </FadeInSection>
 
-          <FadeInSection>
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 text-center">
-                Fresh arrivals and new selections
-              </h2>
-              <div className="relative">
+                <AnimatePresence>
+                  {isMobileMenuOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="md:hidden"
+                    >
+                      <div className="flex flex-col space-y-2 py-4">
+                        <Button variant="outline" className="justify-between">
+                          <span>Categories</span>
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                        <Button variant="outline" className="justify-between">
+                          <span>New Product</span>
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost">About</Button>
+                        <Button variant="ghost">FAQs</Button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex justify-between items-center mt-4">
+                  <h2 className="text-sm font-semibold">Catalogs</h2>
+                  <Drawer open={isOpen} onOpenChange={setIsOpen}>
+                    <DrawerTrigger asChild>
+                      <Button variant="link" size="sm">
+                        View all
+                      </Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                      <DrawerHeader>
+                        <DrawerTitle>All Tech Categories</DrawerTitle>
+                        <DrawerDescription>
+                          Browse our full range of tech product categories.
+                        </DrawerDescription>
+                      </DrawerHeader>
+                      <ScrollArea className="h-[50vh] px-4">
+                        {categories.map((category, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center p-2 hover:bg-muted rounded-lg cursor-pointer"
+                          >
+                            {category.icon()}
+                            <span>{category.name}</span>
+                          </div>
+                        ))}
+                      </ScrollArea>
+                      <DrawerFooter>
+                        <DrawerClose asChild>
+                          <Button variant="outline">Close</Button>
+                        </DrawerClose>
+                      </DrawerFooter>
+                    </DrawerContent>
+                  </Drawer>
+                </div>
                 <Carousel
-                  plugins={[plugins.current]}
+                  ref={categoryCarouselRef}
+                  className="w-full mt-2"
                   opts={{
                     align: "start",
                     loop: true,
                   }}
-                  className="w-full"
                 >
                   <CarouselContent>
-                    {freshArrivals.map((item) => (
+                    {categories.map((category, index) => (
                       <CarouselItem
-                        key={item.id}
-                        className="md:basis-1/2 lg:basis-1/3"
+                        key={index}
+                        className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
                       >
-                        <div className="p-1">
-                          <Card className="overflow-hidden">
-                            <CardContent className="p-0 relative">
-                              <Image
-                                src={item.image}
-                                alt={item.name}
-                                width={300}
-                                height={400}
-                                className="w-full h-[400px] object-cover"
-                              />
-                              <div className="absolute top-2 right-2">
-                                <Button variant="secondary" size="icon">
-                                  <Plus className="h-4 w-4" />
-                                </Button>
-                              </div>
-                              <div className="absolute bottom-4 left-4">
-                                <Badge variant="secondary" className="text-xs">
-                                  Add collections
-                                </Badge>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
+                        <Button variant="outline" size="sm" className="w-full">
+                          {category.name}
+                        </Button>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-5">
                     <CarouselPrevious className="relative inset-auto mr-2" />
                     <CarouselNext className="relative inset-auto" />
                   </div>
                 </Carousel>
-              </div>
-            </section>
-          </FadeInSection>
+              </nav>
+            </FadeInSection>
 
-          <FadeInSection>
-            <ProductSection title="Gaming PCs" products={gamingPCs} />
-          </FadeInSection>
-
-          <FadeInSection>
-            <ProductSection title="Gaming Laptops" products={gamingLaptops} />
-          </FadeInSection>
-
-          <FadeInSection>
-            <ProductSection title="Gaming Mice" products={gamingMice} />
-          </FadeInSection>
-
-          <FadeInSection>
-            <ProductSection
-              title="Gaming Keyboards"
-              products={gamingKeyboards}
-            />
-          </FadeInSection>
-
-          <Separator className="my-8" />
-          <FadeInSection>
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Best Sellers</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {bestSellers.map((product) => (
-                  <Card key={product.id} className="overflow-hidden">
-                    <CardContent className="flex items-center p-4">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        width={20}
-                        height={20}
-                        className="w-20 h-20 object-cover mr-4 rounded"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-lg">
-                          {product.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          ${product.price.toFixed(2)}
-                        </p>
-                      </div>
-                      <Star className="ml-auto text-yellow-400 w-5 h-5" />
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          </FadeInSection>
-
-          <Separator className="my-8" />
-          <FadeInSection>
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Coming Soon</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {upcomingProducts.map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+            <FadeInSection>
+              <section className="mb-12">
+                <h2 className="text-3xl font-bold mb-6 text-center">
+                  Fresh arrivals and new selections
+                </h2>
+                <div className="relative">
+                  <Carousel
+                    plugins={[plugins.current]}
+                    opts={{
+                      align: "start",
+                      loop: true,
+                    }}
+                    className="w-full"
                   >
-                    <Card className="overflow-hidden h-full flex flex-col">
-                      <CardHeader className="p-0">
+                    <CarouselContent>
+                      {freshArrivals.map((item) => (
+                        <CarouselItem
+                          key={item.id}
+                          className="md:basis-1/2 lg:basis-1/3"
+                        >
+                          <div className="p-1">
+                            <Card className="overflow-hidden">
+                              <CardContent className="p-0 relative">
+                                <Image
+                                  src={item.image}
+                                  alt={item.name}
+                                  width={300}
+                                  height={400}
+                                  quality={100}
+                                  className="w-full h-[400px] object-cover"
+                                />
+                                <div className="absolute top-2 right-2">
+                                  <Button variant="secondary" size="icon">
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <div className="absolute bottom-4 left-4">
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    Add collections
+                                  </Badge>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <div className="flex justify-center mt-4">
+                      <CarouselPrevious className="relative inset-auto mr-2" />
+                      <CarouselNext className="relative inset-auto" />
+                    </div>
+                  </Carousel>
+                </div>
+              </section>
+            </FadeInSection>
+
+            <FadeInSection>
+              <ProductSection title="Gaming PCs" products={gamingPCs} />
+            </FadeInSection>
+
+            <FadeInSection>
+              <ProductSection title="Gaming Laptops" products={gamingLaptops} />
+            </FadeInSection>
+
+            <FadeInSection>
+              <ProductSection title="Gaming Mice" products={gamingMice} />
+            </FadeInSection>
+
+            <FadeInSection>
+              <ProductSection
+                title="Gaming Keyboards"
+                products={gamingKeyboards}
+              />
+            </FadeInSection>
+
+            <Separator className="my-8" />
+            <FadeInSection>
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold mb-6">Best Sellers</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {bestSellers.map((product) => (
+                    <Card key={product.id} className="overflow-hidden">
+                      <CardContent className="flex items-center p-4">
                         <Image
                           src={product.image}
                           alt={product.name}
-                          className="w-full h-32 object-cover"
                           width={100}
-                          height={32}
+                          height={100}
+                          quality={100}
+                          className="w-20 h-20 object-cover mr-4 rounded"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-lg">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            ${product.price.toFixed(2)}
+                          </p>
+                        </div>
+                        <Star className="ml-auto text-yellow-400 w-5 h-5" />
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            </FadeInSection>
+
+            <Separator className="my-8" />
+            <FadeInSection>
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold mb-6">Coming Soon</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {upcomingProducts.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <Card className="overflow-hidden h-full flex flex-col">
+                        <CardHeader className="p-0">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            width={150}
+                            height={100}
+                            quality={100}
+                            className="w-full h-32 object-cover"
+                          />
+                        </CardHeader>
+                        <CardContent className="p-3 flex-grow">
+                          <CardTitle className="text-sm mb-1">
+                            {product.name}
+                          </CardTitle>
+                          <p className="text-xs text-muted-foreground mb-2">
+                            {product.description}
+                          </p>
+                          <Badge
+                            variant="secondary"
+                            className="text-xs py-0.5 px-1"
+                          >
+                            {product.releaseDate}
+                          </Badge>
+                        </CardContent>
+                        <CardFooter className="bg-secondary p-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full text-xs"
+                          >
+                            Notify Me <ChevronRight className="ml-1 h-3 w-3" />
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            </FadeInSection>
+
+            <FadeInSection>
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold mb-6">Shop Sale</h2>
+                <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white p-8 rounded-lg shadow-lg">
+                  <h3 className="text-3xl font-bold mb-4">
+                    Summer Gaming Blowout!
+                  </h3>
+                  <p className="text-xl mb-6">
+                    Up to 50% off on selected gaming gear. Limited time offer!
+                  </p>
+                  <Button
+                    size="lg"
+                    className="bg-white text-red-500 hover:bg-gray-100"
+                  >
+                    Shop Now <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </div>
+              </section>
+            </FadeInSection>
+
+            <FadeInSection>
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold mb-6">Tech News</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {techNews.map((news) => (
+                    <Card key={news.id} className="overflow-hidden">
+                      <CardHeader className="p-0">
+                        <Image
+                          src={news.image}
+                          alt={news.title}
+                          width={500}
+                          height={300}
+                          quality={100}
+                          className="w-full h-40 object-cover"
                         />
                       </CardHeader>
-                      <CardContent className="p-3 flex-grow">
-                        <CardTitle className="text-sm mb-1">
-                          {product.name}
-                        </CardTitle>
-                        <p className="text-xs text-muted-foreground mb-2">
-                          {product.description}
+                      <CardContent className="p-4">
+                        <h3 className="font-bold text-lg mb-2">{news.title}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {news.excerpt}
                         </p>
-                        <Badge
-                          variant="secondary"
-                          className="text-xs py-0.5 px-1"
-                        >
-                          {product.releaseDate}
-                        </Badge>
                       </CardContent>
-                      <CardFooter className="bg-secondary p-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full text-xs"
-                        >
-                          Notify Me <ChevronRight className="ml-1 h-3 w-3" />
+                      <CardFooter className="bg-secondary p-4">
+                        <Button variant="outline" size="sm" className="w-full">
+                          Read More <ChevronRight className="ml-2 h-4 w-4" />
                         </Button>
                       </CardFooter>
                     </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-          </FadeInSection>
-
-          <FadeInSection>
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Shop Sale</h2>
-              <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-3xl font-bold mb-4">
-                  Summer Gaming Blowout!
-                </h3>
-                <p className="text-xl mb-6">
-                  Up to 50% off on selected gaming gear. Limited time offer!
-                </p>
-                <Button
-                  size="lg"
-                  className="bg-white text-red-500 hover:bg-gray-100"
-                >
-                  Shop Now <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
-              </div>
-            </section>
-          </FadeInSection>
-
-          <FadeInSection>
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Tech News</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {techNews.map((news) => (
-                  <Card key={news.id} className="overflow-hidden">
-                    <CardHeader className="p-0">
-                      <Image
-                        src={news.image}
-                        alt={news.title}
-                        className="w-full h-40 object-cover"
-                        
-                      />
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <h3 className="font-bold text-lg mb-2">{news.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {news.excerpt}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="bg-secondary p-4">
-                      <Button variant="outline" size="sm" className="w-full">
-                        Read More <ChevronRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          </FadeInSection>
-        </div>
-      )}
-    </div>
+                  ))}
+                </div>
+              </section>
+            </FadeInSection>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

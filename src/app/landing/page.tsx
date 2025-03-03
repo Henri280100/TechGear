@@ -1,5 +1,6 @@
 "use client";
 
+import { FadeInSection } from "@/components/animations/FadeInSection";
 import HeaderHero from "@/components/layout/HeaderHero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import Autoplay from "embla-carousel-autoplay";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
   ChevronRight,
@@ -50,7 +51,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
 
 const gamingPCs = [
   {
@@ -268,34 +268,7 @@ const upcomingProducts = [
   },
 ];
 
-const FadeInSection = ({ children }) => {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
 
-  useEffect(() => {
-    if (inView) {
-      controls.start("visible");
-    }
-  }, [controls, inView]);
-
-  return (
-    <motion.div
-      ref={ref}
-      animate={controls}
-      initial="hidden"
-      transition={{ duration: 0.5 }}
-      variants={{
-        visible: { opacity: 1, y: 0 },
-        hidden: { opacity: 0, y: 50 },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 const ProductSection = ({ title, products }) => (
   <section className="mb-12">

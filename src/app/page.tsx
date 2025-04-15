@@ -1,10 +1,10 @@
-import Landing from "./landing/page";
-import ReactQueryProvider from "./ReactQueryProvider";
+import { LandingPageRoute } from "@/modules/shop";
+import { ReactQueryProvider } from "@/providers";
 
 export default function Home() {
   return (
     <ReactQueryProvider>
-      <Landing/>
+      <LandingPageRoute />
     </ReactQueryProvider>
   );
 }

@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     }
 
     const imageBuffer = await response.arrayBuffer();
-    const contentType = response.headers.get("content-type") || "image/jpeg";
+    const contentType = response.headers.get("content-type") ?? "image/jpeg";
 
     return new NextResponse(imageBuffer, {
       headers: {

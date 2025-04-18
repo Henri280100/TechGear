@@ -1,17 +1,23 @@
 "use client";
 
-
 import Image from "next/image";
-import { ChevronRight, ChevronDown, LucideBadgeCheck } from "lucide-react";
+import { ChevronRight, LucideBadgeCheck } from "lucide-react";
 import { formatDateTime } from "@/app/utils/formatDateTime";
 import { Button } from "../ui/button";
 import { ITechNews } from "@/modules/shared/interfaces/ITTechNews";
+import { ExpandableContent } from "../ui/expandable-content";
 
 interface TechNewsSectionProps {
   techNews: ITechNews[];
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
 }
 
-function TechNewsSection({ techNews }: Readonly<TechNewsSectionProps>) {
+function TechNewsSection({
+  techNews,
+
+}: Readonly<TechNewsSectionProps>) {
   const techNewsWithFeatured = techNews.map((news, index) => ({
     ...news,
     featured: index === 0,
@@ -30,14 +36,9 @@ function TechNewsSection({ techNews }: Readonly<TechNewsSectionProps>) {
 
       <div className="relative mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-
           <div className="transform transition-all duration-500 hover:translate-x-1">
             <div className="px-3 py-1 border border-[#4F709C]/20 rounded-full text-sm font-medium text-[#4F709C]/80 inline-flex items-center gap-2 mb-4 bg-[#4F709C]/5 backdrop-blur-sm hover:bg-[#4F709C]/10 transition-all">
-              {/* <span className="material-symbols-outlined ">
-                new_releases
-              </span> */}
-              <LucideBadgeCheck className="text-base"/> {" "}
-              Latest Updates
+              <LucideBadgeCheck className="text-base" /> Latest Updates
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#213555] to-[#4F709C] bg-clip-text text-transparent leading-tight">
               Tech News
@@ -50,8 +51,12 @@ function TechNewsSection({ techNews }: Readonly<TechNewsSectionProps>) {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {techNewsWithFeatured.slice(0, 5).map((news) => (
+        
+
+        <ExpandableContent
+          items={techNewsWithFeatured}
+          initialCount={4} // adjust as needed
+          renderItem={(news, index) => (
             <div
               key={news.url}
               className={`group rounded-2xl overflow-hidden border border-gray-200/60 transition-all duration-500 hover:shadow-xl hover:border-[#4F709C]/20 bg-white ${
@@ -71,6 +76,11 @@ function TechNewsSection({ techNews }: Readonly<TechNewsSectionProps>) {
                         )}`
                       : "/placeholder.svg"
                   }
+                  quality={index === 0 ? 90 : 75}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  priority={index === 0}
+                  placeholder="blur"
+                  blurDataURL={news.urlToImage}
                   alt={news.title}
                   className="w-full h-60 object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -115,15 +125,9 @@ function TechNewsSection({ techNews }: Readonly<TechNewsSectionProps>) {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-16 flex justify-center">
-          <Button className="py-3 px-8 rounded-full bg-[#4F709C]/10 text-[#4F709C] font-medium hover:bg-[#4F709C] hover:text-white transition-all duration-300 flex items-center gap-2 transform hover:scale-105">
-            Load more articles
-            <ChevronDown className="material-symbols-outlined transform transition-transform duration-300" />
-          </Button>
-        </div>
+          )}
+          containerClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
+        />
       </div>
     </section>
   );

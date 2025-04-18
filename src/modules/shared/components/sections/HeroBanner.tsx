@@ -1,12 +1,13 @@
-import { FeatureCardType } from "@/modules/shared/interfaces/FeatureCard";
+'use client'
 
+import { FeatureCardType } from "@/modules/shared/interfaces/FeatureCard";
 import { Info, Monitor, ShoppingCart } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
-const HeroSection = () => {
+const HeroBanner = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -15,6 +16,12 @@ const HeroSection = () => {
     }, []);
   
     return (
+      <motion.section
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="relative bg-gradient-to-r from-primary to-secondary overflow-hidden"
+                >
       <div className="relative min-h-screen overflow-hidden bg-gray-900">
         <div
           className="absolute inset-0"
@@ -116,6 +123,7 @@ const HeroSection = () => {
           </motion.div>
         </div>
       </div>
+      </motion.section>
     );
   };
   
@@ -158,4 +166,4 @@ const HeroSection = () => {
     </motion.div>
   );
 
-export default HeroSection;
+export default HeroBanner;

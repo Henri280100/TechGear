@@ -1,28 +1,24 @@
 "use client"; // Since we're using hooks, this needs to be a client component
 
-
-
 import {
+  earBuds,
   gamingKeyboards,
   gamingLaptops,
   gamingMice,
   gamingPCs,
-  earBuds
 } from "@/modules/shop/data/products";
-import { useTechNews } from "@/modules/shared/hooks/useTechNews";
 import { useEffect } from "react";
 import ErrorMessage from "../ui/ErrorMessage";
 import Loading from "../ui/Loading";
 import { Separator } from "../ui/separator";
-import HeaderHero from "../layout/HeaderHero";
-import { FadeInSection } from "../animations/FadeInSection";
+import { useTechNews } from "../../hooks";
+import { FadeInSection } from "../animations";
 import CategorySection from "./CategorySection";
 import FreshArrivalsSection from "./FreshArrivalsSection";
 import ProductSection from "./ProductSection";
 import BestSellersSection from "./BestSellersSection";
 import ComingSoonSection from "./ComingSoonSection";
 import ShopSaleSection from "./ShopSaleSection";
-import Footer from "../layout/Footer";
 import TechNewsSection from "./TechNewsSection";
 
 interface LandingPageProps {
@@ -32,7 +28,15 @@ interface LandingPageProps {
 export default function LandingPageSection({
   onRefetch,
 }: Readonly<LandingPageProps>) {
-  const { data: techNews, isLoading, error, refetch } = useTechNews();
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useTechNews();
 
   useEffect(() => {
     if (onRefetch) onRefetch(refetch);
@@ -48,9 +52,11 @@ export default function LandingPageSection({
     );
   }
 
+  // Flatten articles from all pages
+  const techNews = data?.pages.flatMap((page) => page.articles) ?? [];
+
   return (
-    <>
-      <HeaderHero />
+    
       <div className="container mx-auto px-4 py-8 bg-gray-50">
         <FadeInSection>
           <CategorySection />
@@ -97,10 +103,14 @@ export default function LandingPageSection({
         </FadeInSection>
 
         <FadeInSection>
-          <TechNewsSection techNews={techNews || []} />
+          <TechNewsSection
+            techNews={techNews}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         </FadeInSection>
       </div>
-      <Footer />
-    </>
+    
   );
 }

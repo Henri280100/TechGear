@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
-import React, { useEffect, ReactNode } from "react";
+import { motion } from "framer-motion";
+import React, { ReactNode } from "react";
 import { useInView } from "react-intersection-observer";
 
 export interface FadeInSectionProps {
@@ -9,28 +9,14 @@ export interface FadeInSectionProps {
 };
 
 export const FadeInSection: React.FC<FadeInSectionProps> = ({ children }) => {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  useEffect(() => {
-    if (inView) {
-      controls.start("visible");
-    }
-  }, [controls, inView]);
+  const { ref, inView } = useInView({ threshold: 0.1 });
 
   return (
     <motion.div
       ref={ref}
-      animate={controls}
-      initial="hidden"
-      transition={{ duration: 0.5 }}
-      variants={{
-        visible: { opacity: 1, y: 0 },
-        hidden: { opacity: 0, y: 50 },
-      }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.2 }}
     >
       {children}
     </motion.div>

@@ -77,6 +77,8 @@ function ProductSection({
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
+                    priority
+                    quality={80}
                   />
                 </div>
                 <div className="absolute top-0 right-0 p-1 flex flex-col gap-1">
@@ -85,11 +87,11 @@ function ProductSection({
                       New
                     </Badge>
                   )}
-                  {product.discount && (
+                  {product.discount ? (
                     <Badge className="text-xs bg-red-500 text-white">
                       {product.discount}% Off
                     </Badge>
-                  )}
+                  ) : null}
                 </div>
                 <div className="absolute top-1 left-1 flex gap-1">
                   <Button
@@ -194,6 +196,8 @@ function DetailProductPreview({
           src={product.image || "/placeholder.svg"}
           alt={product.name}
           fill
+          priority
+          quality={80}
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 300px"
         />
@@ -286,11 +290,11 @@ function DetailProductPreview({
           <p className="text-xl font-bold text-primary">
             ${product.price.toFixed(2)}
           </p>
-          {product.discount && product.discount > 0 && (
+          {product.discount && product.discount > 0 ? (
             <p className="text-sm line-through text-muted-foreground">
               ${(product.price * (1 + product.discount / 100)).toFixed(2)}
             </p>
-          )}
+          ) : null}
         </div>
 
         <div className="flex items-center gap-2 mt-4">

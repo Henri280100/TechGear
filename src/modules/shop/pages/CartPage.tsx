@@ -7,6 +7,7 @@ import { Minus, Plus, X, ShoppingBag } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/modules/shared/components/ui/button";
 import { Separator } from "@/modules/shared/components/ui/separator";
+import Link from "next/link";
 
 
 
@@ -65,7 +66,7 @@ export function CartPage() {
           <h2 className="text-2xl font-medium mb-3">Your cart is empty</h2>
           <p className="text-muted-foreground mb-6">Looks like you haven&apos;t added anything to your cart yet.</p>
           <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-6 h-auto rounded-xl shadow-md hover:shadow-lg transition-all">
-            Continue Shopping
+            <Link href='/'/> Continue Shopping
           </Button>
         </div>
       </div>

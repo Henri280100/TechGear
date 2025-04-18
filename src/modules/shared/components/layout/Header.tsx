@@ -10,14 +10,17 @@ import MotionIcons from "../animations/MotionIcons";
 import MotionLogo from "../animations/MotionLogo";
 import BottomNavItem from "../ui/bottom-nav-item";
 import { Input } from "../ui/input";
-
+import { usePathname } from "next/navigation";
 
 export default function Header() {
-  
+  const pathname = usePathname();
   const { toggleMobileMenu } = useMobileMenu();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollY, setScrollY] = useState(0);
+
+  const isCartPage = pathname.startsWith("/shop/cart");
+  
 
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
   const ref = useRef<HTMLDivElement>(null);
@@ -41,6 +44,12 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+
   return (
     <header>
       <motion.header
@@ -48,10 +57,13 @@ export default function Header() {
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={cn(
-          "fixed w-full top-0 z-50 transition-all duration-300",
-          scrollY > 50
-            ? "bg-background/80 backdrop-blur-lg shadow-lg text-foreground"
-            : "bg-transparent text-white"
+          "w-full top-0 z-50 transition-all duration-300",
+          !isCartPage && "fixed",
+          isCartPage
+            ? "bg-white text-foreground shadow" // always apply black text + white bg on cart page
+            : !isAtTop
+              ? "bg-background/80 backdrop-blur-lg shadow-lg text-foreground"
+              : "bg-transparent text-white"
         )}
       >
         <div className="container mx-auto px-4 py-4">
@@ -99,8 +111,6 @@ export default function Header() {
           <BottomNavItem href="/account" icon={User} label="Account" />
         </div>
       </nav>
-
-      
     </header>
   );
 }

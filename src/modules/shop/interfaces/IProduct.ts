@@ -16,6 +16,7 @@ export interface IProduct {
   discount: number;
   isNew: boolean;
   colors: string[];
+  brand: string[];
 }
 
 export type ProductPreview = Pick<
@@ -35,6 +36,7 @@ export type ProductPreview = Pick<
   | "hype"
   | "description"
   | "features"
+  | "brand"
 >;
 
 export type UpComingProductPreview = Pick<

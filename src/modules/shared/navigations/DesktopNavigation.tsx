@@ -1,7 +1,10 @@
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Layers, Menu, Tag, Zap } from "lucide-react";
+import Link from "next/link";
 import React, { useState } from "react";
 import { containerVariants } from "../components/animations/AnimationVariant";
+import ListItem from "../components/ui/list-item";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,14 +15,14 @@ import {
   navigationMenuTriggerStyle,
 } from "../components/ui/navigation-menu";
 import { categories, submenuData } from "../data/categoriesMenuData";
-import ListItem from "../components/ui/list-item";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { HeaderPropsPreview } from "../interfaces/HeaderProps";
+import { usePathname } from "next/navigation";
 
 
 const DesktopNavigation: React.FC<HeaderPropsPreview> = ({ isAtTop }) => {
+  const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const isCartPage = pathname.startsWith("/shop/cart");
   return (
     <>
       {/* Desktop Navigation */}
@@ -136,7 +139,7 @@ const DesktopNavigation: React.FC<HeaderPropsPreview> = ({ isAtTop }) => {
                 className={cn(
                   navigationMenuTriggerStyle(),
                   "bg-transparent transition-colors",
-                  isAtTop
+                  isAtTop && !isCartPage
                     ? "text-white hover:bg-white/20"
                     : "text-foreground hover:bg-accent/50"
                 )}

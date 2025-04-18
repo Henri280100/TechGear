@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Check, Eye, Heart, ShoppingCart, Star } from "lucide-react";
+import { Check, ChevronRight, Eye, Heart, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
@@ -43,6 +43,47 @@ function ProductSection({
   const [previewProduct, setPreviewProduct] = useState<ProductPreview | null>(
     null
   );
+  const [activeBrand, setActiveBrand] = useState("all")
+  const [showAllBrands, setShowAllBrands] = useState(false)
+
+  // Extract unique brands from products
+  const extractBrands = (): string[] => {
+    const brandSet = new Set<string>()
+
+    // Add "all" as the first option
+    brandSet.add("all")
+
+    // Extract brands from products
+    products.forEach((product) => {
+      if (product.brand && Array.isArray(product.brand)) {
+        // If brand is an array, add each brand
+        product.brand.forEach((b) => {
+          if (b) brandSet.add(b)
+        })
+      } else if (product.brand) {
+        // If brand is a string
+        brandSet.add(product.brand)
+      }
+    })
+
+    return Array.from(brandSet)
+  }
+
+  const brands = extractBrands()
+
+  // Display only first 5 brands, or all if showAllBrands is true
+  const displayedBrands = showAllBrands ? brands : brands.slice(0, 5)
+
+  // Filter products by selected brand
+  const filteredProducts =
+    activeBrand === "all"
+      ? products
+      : products.filter((product) => {
+          if (Array.isArray(product.brand)) {
+            return product.brand.includes(activeBrand)
+          }
+          return product.brand === activeBrand
+        })
 
   const handlePreview = (product: ProductPreview) => {
     setPreviewProduct(product);
@@ -50,20 +91,56 @@ function ProductSection({
 
   return (
     <section className="mb-12">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold pb-2 border-b-2 border-primary">
-          {title}
-        </h2>
-        <Button
-          variant="outline"
-          className="hover:bg-primary hover:text-primary-foreground transition-colors"
-          onClick={onViewMore}
-        >
-          View More
-        </Button>
+      <div className="flex flex-col space-y-4 mb-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold pb-2 border-b-2 border-primary">{title}</h2>
+
+          <Button
+            variant="outline"
+            className="hover:bg-primary hover:text-primary-foreground transition-colors hidden sm:flex"
+            onClick={onViewMore}
+          >
+            View More <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="overflow-x-auto pb-2 -mx-1 scrollbar-hide">
+            <Tabs defaultValue="all" value={activeBrand} onValueChange={setActiveBrand} className="w-full">
+              <TabsList className="h-9 bg-muted/50">
+                {displayedBrands.map((brand) => (
+                  <TabsTrigger key={brand} value={brand} className="text-xs sm:text-sm capitalize px-3 py-1.5">
+                    {brand}
+                  </TabsTrigger>
+                ))}
+
+                {brands.length > 5 && !showAllBrands && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowAllBrands(true)}
+                    className="text-xs sm:text-sm h-7 px-2"
+                  >
+                    More +
+                  </Button>
+                )}
+              </TabsList>
+            </Tabs>
+          </div>
+
+          <Button
+            variant="outline"
+            className="hover:bg-primary hover:text-primary-foreground transition-colors sm:hidden"
+            size="sm"
+            onClick={onViewMore}
+          >
+            View All
+          </Button>
+        </div>
       </div>
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {products.slice(0, 6).map((product) => (
+        {filteredProducts.slice(0, 6).map((product) => (
           <Card
             key={product.productId}
             className="overflow-hidden h-full flex flex-col group hover:shadow-xl transition-shadow duration-300"
@@ -82,15 +159,9 @@ function ProductSection({
                   />
                 </div>
                 <div className="absolute top-0 right-0 p-1 flex flex-col gap-1">
-                  {product.isNew && (
-                    <Badge className="text-xs bg-primary text-primary-foreground">
-                      New
-                    </Badge>
-                  )}
+                  {product.isNew && <Badge className="text-xs bg-primary text-primary-foreground">New</Badge>}
                   {product.discount ? (
-                    <Badge className="text-xs bg-red-500 text-white">
-                      {product.discount}% Off
-                    </Badge>
+                    <Badge className="text-xs bg-red-500 text-white">{product.discount}% Off</Badge>
                   ) : null}
                 </div>
                 <div className="absolute top-1 left-1 flex gap-1">
@@ -102,6 +173,7 @@ function ProductSection({
                     <Heart className="h-4 w-4" />
                     <span className="sr-only">Add to wishlist</span>
                   </Button>
+
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
@@ -115,12 +187,10 @@ function ProductSection({
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[625px]">
-                      <DetailProductPreview
-                        product={product}
-                        onAddToCart={onAddToCart}
-                      />
+                      {previewProduct &&<DetailProductPreview product={product} onAddToCart={onAddToCart} />}
                     </DialogContent>
                   </Dialog>
+                  
                 </div>
               </div>
             </CardHeader>
@@ -128,33 +198,25 @@ function ProductSection({
               <CardTitle className="text-sm mb-1 line-clamp-1 group-hover:text-primary transition-colors">
                 {product.name}
               </CardTitle>
-              <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
-                {product.specs}
-              </p>
+              <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{product.specs}</p>
               <div className="flex items-center mb-2">
                 {[...Array(5)].map((_, index) => (
                   <Star
                     key={`star-${index + 1}`}
                     className={`w-3 h-3 ${
-                      index < Math.floor(product.rating)
-                        ? "text-yellow-400 fill-current"
-                        : "text-gray-300"
+                      index < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
                     }`}
                   />
                 ))}
-                <span className="ml-1 text-xs text-gray-600">
-                  {product.rating.toFixed(1)}
-                </span>
+                <span className="ml-1 text-xs text-gray-600">{product.rating.toFixed(1)}</span>
               </div>
               <div className="flex items-baseline gap-2">
-                <p className="text-sm font-bold text-primary">
-                  ${product.price.toFixed(2)}
-                </p>
-                {product.discount && (
+                <p className="text-sm font-bold text-primary">${product.price.toFixed(2)}</p>
+                {product.discount ? (
                   <p className="text-xs line-through text-muted-foreground">
                     ${(product.price * (1 + product.discount / 100)).toFixed(2)}
                   </p>
-                )}
+                ) : null}
               </div>
             </CardContent>
             <CardFooter className="p-2 bg-secondary/50 flex justify-center items-center">
@@ -177,6 +239,16 @@ function ProductSection({
             </CardFooter>
           </Card>
         ))}
+      </div>
+
+      <div className="mt-6 flex justify-center sm:hidden">
+        <Button
+          variant="outline"
+          className="hover:bg-primary hover:text-primary-foreground transition-colors"
+          onClick={onViewMore}
+        >
+          View More Products <ChevronRight className="ml-1 h-4 w-4" />
+        </Button>
       </div>
     </section>
   );

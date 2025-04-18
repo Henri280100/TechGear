@@ -1,6 +1,5 @@
 import { ProductPreview } from "../interfaces/IProduct";
 
-
 export const gamingPCs: ProductPreview[] = [
   {
     productId: 1,
@@ -14,8 +13,10 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: true,
     colors: [],
-    description: "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: ["PC R5"],
   },
   {
     productId: 2,
@@ -29,8 +30,10 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: false,
     colors: [],
-    description: "A high-performance gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A high-performance gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3090", "64GB RAM", "2TB SSD"],
+    brand: ["PC I3"],
   },
   {
     productId: 3,
@@ -44,8 +47,10 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: true,
     colors: [],
-    description: "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: ["PC I5"],
   },
   {
     productId: 4,
@@ -59,8 +64,10 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: true,
     colors: [],
-    description: "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: ["PC I7"],
   },
   {
     productId: 5,
@@ -74,8 +81,10 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: false,
     colors: [],
-    description: "A high-performance gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A high-performance gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3090", "64GB RAM", "2TB SSD"],
+    brand: ["PC I9"],
   },
   {
     productId: 6,
@@ -89,9 +98,12 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: true,
     colors: [],
-    description: "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: ["PC R3"],
   },
+
   {
     productId: 7,
     name: "UltraGamer Pro",
@@ -104,10 +116,28 @@ export const gamingPCs: ProductPreview[] = [
     discount: 10,
     isNew: true,
     colors: [],
-    description: "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: ["PC R9"],
   },
-
+  {
+    productId: 8,
+    name: "UltraGamer Pro",
+    price: 1999.99,
+    rating: 4.8,
+    image: "/placeholder.svg?height=150&width=150",
+    specs: "RTX 3080, 32GB RAM",
+    category: "Desktop PC",
+    inStock: true,
+    discount: 10,
+    isNew: true,
+    colors: [],
+    description:
+      "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
+    features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: ["PC I5"],
+  },
 ];
 
 export const gamingLaptops: ProductPreview[] = [
@@ -123,8 +153,10 @@ export const gamingLaptops: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: [],
-    description: "A powerful gaming laptop with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A powerful gaming laptop with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3070", "16GB RAM", "512GB SSD"],
+    brand: [],
   },
   {
     productId: 2,
@@ -138,8 +170,10 @@ export const gamingLaptops: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: [],
-    description: "A high-performance gaming laptop with the latest NVIDIA graphics card and a large amount of RAM.",
+    description:
+      "A high-performance gaming laptop with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
+    brand: [],
   },
 ];
 
@@ -156,8 +190,10 @@ export const gamingMice: ProductPreview[] = [
     discount: 0,
     isNew: false,
     colors: [],
-    description: "A high-precision gaming mouse with a high DPI and many customizable buttons.",
+    description:
+      "A high-precision gaming mouse with a high DPI and many customizable buttons.",
     features: ["20000 DPI", "8 Buttons", "Ergonomic Design"],
+    brand: [],
   },
   {
     productId: 2,
@@ -171,8 +207,10 @@ export const gamingMice: ProductPreview[] = [
     discount: 0,
     isNew: true,
     colors: [],
-    description: "A high-performance wireless gaming mouse with a high DPI and long battery life.",
+    description:
+      "A high-performance wireless gaming mouse with a high DPI and long battery life.",
     features: ["Wireless", "25000 DPI", "Long Battery Life"],
+    brand: [],
   },
 ];
 
@@ -189,8 +227,10 @@ export const gamingKeyboards: ProductPreview[] = [
     discount: 0,
     isNew: false,
     colors: [],
-    description: "A high-quality mechanical gaming keyboard with customizable RGB lighting.",
+    description:
+      "A high-quality mechanical gaming keyboard with customizable RGB lighting.",
     features: ["Mechanical", "RGB", "Customizable Lighting"],
+    brand: [],
   },
   {
     productId: 2,
@@ -204,8 +244,10 @@ export const gamingKeyboards: ProductPreview[] = [
     discount: 0,
     isNew: true,
     colors: [],
-    description: "A high-performance gaming keyboard with optical switches and macro keys.",
+    description:
+      "A high-performance gaming keyboard with optical switches and macro keys.",
     features: ["Optical Switches", "Macro Keys", "N-Key Rollover"],
+    brand: [],
   },
 ];
 
@@ -222,8 +264,10 @@ export const earBuds: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: ["White", "Black"],
-    description: "A high-quality wireless earbuds with noise cancelling technology and a long battery life.",
+    description:
+      "A high-quality wireless earbuds with noise cancelling technology and a long battery life.",
     features: ["Wireless", "Noise Cancelling", "Long Battery Life"],
+    brand: [],
   },
   {
     productId: 2,
@@ -237,8 +281,10 @@ export const earBuds: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: ["White", "Black"],
-    description: "A high-quality wireless earbuds with a sweat-resistant design and a long battery life.",
+    description:
+      "A high-quality wireless earbuds with a sweat-resistant design and a long battery life.",
     features: ["Wireless", "Sweat Resistant", "Long Battery Life"],
+    brand: [],
   },
   {
     productId: 3,
@@ -252,8 +298,10 @@ export const earBuds: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: ["White", "Black"],
-    description: "A high-quality wireless earbuds with a long battery life and Android compatibility.",
+    description:
+      "A high-quality wireless earbuds with a long battery life and Android compatibility.",
     features: ["Wireless", "Android Compatible", "Long Battery Life"],
+    brand: [],
   },
   {
     productId: 4,
@@ -267,8 +315,10 @@ export const earBuds: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: ["White", "Black"],
-    description: "A high-quality wireless earbuds with a long battery life and Google Assistant integration.",
+    description:
+      "A high-quality wireless earbuds with a long battery life and Google Assistant integration.",
     features: ["Wireless", "Google Assistant", "Long Battery Life"],
+    brand: [],
   },
   {
     productId: 5,
@@ -282,8 +332,9 @@ export const earBuds: ProductPreview[] = [
     discount: 5,
     isNew: true,
     colors: ["White", "Black", "Blue"],
-    description: "A high-quality wireless earbuds with a long battery life and a affordable price.",
+    description:
+      "A high-quality wireless earbuds with a long battery life and a affordable price.",
     features: ["Wireless", "Long Battery Life", "Affordable Price"],
+    brand: [],
   },
 ];
-

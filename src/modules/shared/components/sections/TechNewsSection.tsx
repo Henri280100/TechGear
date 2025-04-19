@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronRight, LucideBadgeCheck } from "lucide-react";
+import { Calendar, ChevronRight, LucideBadgeCheck, Tag } from "lucide-react";
 import { formatDateTime } from "@/app/utils/formatDateTime";
 import { Button } from "../ui/button";
 import { ITechNews } from "@/modules/shared/interfaces/ITTechNews";
@@ -97,15 +97,11 @@ function TechNewsSection({
               <div className="p-6">
                 <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
                   <span className="flex items-center">
-                    <span className="material-symbols-outlined mr-1 text-base">
-                      calendar_month
-                    </span>
+                    <Calendar className="mr-1 text-base"/>
                     {formatDateTime(news.publishedAt)}
                   </span>
                   <span className="flex items-center">
-                    <span className="material-symbols-outlined mr-1 text-base">
-                      sell
-                    </span>
+                      <Tag className="mr-1 text-base" />
                     {news.category}
                   </span>
                 </div>

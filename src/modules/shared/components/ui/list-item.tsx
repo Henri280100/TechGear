@@ -1,23 +1,22 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import {
-    ChevronRight
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
 } from "../ui/hover-card";
-
 import { SubmenuItem } from "../../interfaces/CategoryMenu";
 import { Button } from "../ui/button";
-import {
-    NavigationMenuLink
-} from "../ui/navigation-menu";
+import { NavigationMenuLink } from "../ui/navigation-menu";
 import { submenuData } from "../../data/categoriesMenuData";
-import { iconVariants, itemVariants, containerVariants } from "../animations/AnimationVariant";
+import {
+  iconVariants,
+  itemVariants,
+  containerVariants,
+} from "../animations/AnimationVariant";
 
 const ListItem = React.forwardRef<
   React.ComponentRef<"a">,

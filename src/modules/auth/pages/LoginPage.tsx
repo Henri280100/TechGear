@@ -5,16 +5,20 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+
+import { toast } from "@/modules/shared/hooks/use-toast";
+import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/modules/shared/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/modules/shared/components/ui/card";
+
 import {
   Form,
   FormControl,
@@ -22,10 +26,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { toast } from "@/modules/shared/hooks/use-toast";
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
-import Link from "next/link";
+} from "@/modules/shared/components/ui/form";
+import { Input } from "@/modules/shared/components/ui/input";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

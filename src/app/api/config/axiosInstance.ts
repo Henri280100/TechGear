@@ -13,7 +13,7 @@ const newsApiClient: AxiosInstance = axios.create({
 
 // Axios instance for your backend API
 const backendApiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL ?? "https://your-backend-api.com",
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL ?? "http://localhost:8082/api/v01",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -34,19 +34,6 @@ newsApiClient.interceptors.request.use(
   }
 );
 
-// Request Interceptor for Backend API: Add Bearer token to headers
-backendApiClient.interceptors.request.use(
-  (config) => {
-    const token = process.env.NEXT_PUBLIC_BACKEND_API_TOKEN; // Replace with your token logic (e.g., from localStorage or a context)
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
-);
 
 // Response Interceptor for NewsAPI: Handle global error responses
 newsApiClient.interceptors.response.use(
@@ -80,11 +67,6 @@ backendApiClient.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response;
       console.error(`Backend API Error [${status}]: ${data?.message || "Unknown error"}`);
-      if (status === 401) {
-        console.error("Unauthorized - Please check your backend API token");
-      } else if (status === 403) {
-        console.error("Forbidden - You do not have access to this resource");
-      }
     } else if (error.request) {
       console.error("Network Error: Please check your internet connection");
     } else {

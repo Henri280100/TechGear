@@ -1,25 +1,27 @@
 import { ITechNews } from "@/modules/shared/interfaces/ITTechNews";
-import { newsApiClient } from "../../../app/api/config/axiosInstance";
+import { getRequest } from "./httpService";
+import { newsApiClient } from "@/app/api/config/axiosInstance";
 
-
-export const fetchTechNews = async ({ pageParam = 1 }): Promise<{ articles: ITechNews[]; nextPage: number | null }> => {
+export const fetchTechNews = async ({
+  pageParam = 1,
+}): Promise<{ articles: ITechNews[]; nextPage: number | null }> => {
   const pageSize = 5;
 
   try {
-    const res = await newsApiClient.get<{ articles: ITechNews[] }>(
+    const data = await getRequest<{ articles: ITechNews[] }>(
+      newsApiClient,
       "/top-headlines",
       {
-        params: {
-          category: "technology",
-          pageSize,
-          page: pageParam,
-        },
+        category: "technology",
+        pageSize: 5,
+        page: pageParam,
       }
     );
 
-    const hasMore = res.data.articles.length === pageSize;
+    const hasMore = data.articles.length === pageSize;
+
     return {
-      articles: res.data.articles,
+      articles: data.articles,
       nextPage: hasMore ? pageParam + 1 : null,
     };
   } catch (error) {

@@ -18,7 +18,6 @@ import { categories, submenuData } from "../data/categoriesMenuData";
 import { HeaderPropsPreview } from "../interfaces/HeaderProps";
 import { usePathname } from "next/navigation";
 
-
 const DesktopNavigation: React.FC<HeaderPropsPreview> = ({ isAtTop }) => {
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -134,8 +133,9 @@ const DesktopNavigation: React.FC<HeaderPropsPreview> = ({ isAtTop }) => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/deals" legacyBehavior passHref>
-              <NavigationMenuLink
+            <NavigationMenuLink asChild>
+              <Link
+                href="/deals"
                 className={cn(
                   navigationMenuTriggerStyle(),
                   "bg-transparent transition-colors",
@@ -150,13 +150,13 @@ const DesktopNavigation: React.FC<HeaderPropsPreview> = ({ isAtTop }) => {
                 >
                   Deals
                 </motion.span>
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </>
   );
-}
+};
 
 export default DesktopNavigation;

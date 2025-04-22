@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "./Header";
 import HeroBanner from "../sections/HeroBanner";
 import Footer from "./Footer";
+import { ReactQueryProvider } from "@/providers";
 
 export function LayoutWrapper({
   children,
@@ -12,11 +13,11 @@ export function LayoutWrapper({
   const showHero = pathname === "/";
 
   return (
-    <>
+    <ReactQueryProvider>
       <Header />
       {showHero && <HeroBanner />}
       {children}
       <Footer />
-    </>
+    </ReactQueryProvider>
   );
 }

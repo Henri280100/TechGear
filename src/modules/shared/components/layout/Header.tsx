@@ -2,15 +2,15 @@
 
 import { cn } from "@/lib/utils";
 import { useMobileMenu } from "@/modules/shared/hooks/useMobileMenu";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Home, Layers, Percent, ShoppingBag, User } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import DesktopNavigation from "../../navigations/DesktopNavigation";
 import MotionIcons from "../animations/MotionIcons";
 import MotionLogo from "../animations/MotionLogo";
 import BottomNavItem from "../ui/bottom-nav-item";
-import { Input } from "../ui/input";
-import { usePathname } from "next/navigation";
+import HeaderSearchBar from "../ui/search-bar";
 
 export default function Header() {
   const pathname = usePathname();
@@ -20,7 +20,6 @@ export default function Header() {
   const [scrollY, setScrollY] = useState(0);
 
   const isCartPage = pathname.startsWith("/shop/cart");
-  
 
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
   const ref = useRef<HTMLDivElement>(null);
@@ -49,6 +48,9 @@ export default function Header() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  const headerClassName = !isAtTop
+    ? "bg-background/80 backdrop-blur-lg shadow-lg text-foreground"
+    : "bg-transparent text-white";
 
   return (
     <header>
@@ -59,11 +61,7 @@ export default function Header() {
         className={cn(
           "w-full top-0 z-50 transition-all duration-300",
           !isCartPage && "fixed",
-          isCartPage
-            ? "bg-white text-foreground shadow" // always apply black text + white bg on cart page
-            : !isAtTop
-              ? "bg-background/80 backdrop-blur-lg shadow-lg text-foreground"
-              : "bg-transparent text-white"
+          isCartPage ? "bg-white text-foreground shadow" : headerClassName
         )}
       >
         <div className="container mx-auto px-4 py-4">
@@ -82,24 +80,7 @@ export default function Header() {
           </div>
 
           {/* Search Bar */}
-          <AnimatePresence>
-            {isSearchOpen && (
-              <motion.div
-                ref={ref}
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mt-4"
-              >
-                <Input
-                  type="search"
-                  placeholder="Search products..."
-                  className="w-full bg-background/50 backdrop-blur-md focus:bg-background/80 transition-all duration-300"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <HeaderSearchBar isOpen={isSearchOpen} onClose={toggleSearch} />
         </div>
       </motion.header>
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg shadow-lg z-50">

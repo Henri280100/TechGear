@@ -1,6 +1,9 @@
+import { Availability } from "@/constants/enum/Availability";
+
 export interface IProduct {
   productId: number;
   name: string;
+  productAvailability: Availability; // Availability status (e.g., "In Stock", "Out of Stock")
   description: string;
   features: string[];
   image: string;
@@ -10,13 +13,16 @@ export interface IProduct {
   title: string;
   rating: number;
   price: number;
+  maxPrice: number;
+  minPrice: number;
   specs: string;
   category: string; // Category of the product (e.g., "Laptop", "Mouse", etc.)
-  inStock: boolean; // Availability of the product
   discount: number;
   isNew: boolean;
   colors: string[];
   brand: string[];
+  warranty: string;
+  stockLevel: number;
 }
 
 export type ProductPreview = Pick<
@@ -28,7 +34,7 @@ export type ProductPreview = Pick<
   | "rating"
   | "specs"
   | "category"
-  | "inStock"
+  | "productAvailability"
   | "isNew"
   | "discount"
   | "colors"
@@ -41,5 +47,11 @@ export type ProductPreview = Pick<
 
 export type UpComingProductPreview = Pick<
   IProduct,
-  "productId" | "name" | "description" | "image" | "releaseDate" | "daysLeft" | "hype"
+  | "productId"
+  | "name"
+  | "description"
+  | "image"
+  | "releaseDate"
+  | "daysLeft"
+  | "hype"
 >;

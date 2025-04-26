@@ -310,7 +310,7 @@ function DetailProductPreview({
               <div className="mt-4 flex items-center gap-2">
                 <span className="text-sm font-medium">Availability:</span>
                 <span className="flex items-center text-sm">
-                  {product.inStock ? (
+                  {product.productAvailability ? (
                     <>
                       <Check className="mr-1 h-4 w-4 text-green-500" /> In Stock
                     </>

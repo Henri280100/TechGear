@@ -41,10 +41,16 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
                 <div className="relative rounded-md overflow-hidden border border-gray-100 bg-gray-50 h-[120px] group-hover:scale-105 transition-transform duration-300">
                   <Image
                     src={item?.productImage ?? "/placeholder-image.png"}
-                    alt={item?.productName ?? "Product Image"}
+                    alt={item?.productImage ?? "Product Image"}
                     width={120}
                     height={120}
-                    className="object-cover w-full h-full"
+                    quality={80}
+                    priority
+                    className="object-cover w-full h-full text-foreground"
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${item?.productImage}`);
+                      e.currentTarget.src = '/placeholder-image.png'; // Fallback on error
+                    }}
                   />
                 </div>
               </div>

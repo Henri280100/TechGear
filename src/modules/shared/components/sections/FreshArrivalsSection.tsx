@@ -81,6 +81,7 @@ export default function FreshArrivalsSection() {
                           loading={index === 0 ? "eager" : "lazy"}
                           priority={index === 0}
                           placeholder="blur"
+                          
                           className="w-full h-[400px] object-cover"
                           blurDataURL={item.image}
                         />

@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 
 import LandingPageSection from "@/modules/shared/components/sections/LandingPageSections";
 import ErrorBoundary from "@/modules/shared/components/ui/ErrorBoundary";
@@ -18,7 +17,7 @@ export function LandingPageRoute() {
 
   return (
     <ErrorBoundary
-      fallbackMessage="Failed to load the landing page"
+      fallbackMessage="Uh Oh! Failed to load the landing page 😔"
       onReset={handleReset}
     >
       <LandingPageSection

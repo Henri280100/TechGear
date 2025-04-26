@@ -1,3 +1,5 @@
+import { MdErrorOutline } from "react-icons/md";
+
 interface ErrorProps {
   message?: string;
   onRetry?: () => void;
@@ -15,7 +17,7 @@ export default function ErrorMessage({
     >
       {/* Error Icon */}
       <div className="text-red-500 text-4xl">
-        <span className="material-symbols-outlined">error</span>
+          <MdErrorOutline />    
       </div>
 
       {/* Error Message */}
@@ -25,7 +27,7 @@ export default function ErrorMessage({
       {onRetry && (
         <button
           onClick={onRetry}
-          className="py-2 px-4 rounded-full bg-[#4F709C] text-white font-medium hover:bg-[#4F709C]/80 transition-all duration-300"
+          className="py-2 px-16 rounded-full bg-[#4F709C] text-white font-medium hover:bg-[#4F709C]/80 transition-all duration-300"
         >
           Retry
         </button>

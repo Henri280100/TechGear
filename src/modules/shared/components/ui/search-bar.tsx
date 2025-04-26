@@ -1,13 +1,14 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "./input";
-import { useRef, useEffect, useState, SetStateAction, useMemo } from "react";
-import { useDebounce } from "@uidotdev/usehooks";
-import { useSearch } from "../../hooks/useSearch";
-import { useRouter } from "next/navigation";
-import SearchResultList from "./search-result-list";
 import { ProductSearchParams } from "@/modules/shop/interfaces/ProductSearch";
+import { useDebounce } from "@uidotdev/usehooks";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import useIsMobile from "../../hooks/useIsMobile";
+import { useSearch } from "../../hooks/useSearch";
+import { Input } from "./input";
+import SearchResultList from "./search-result-list";
 
 interface HeaderSearchBarProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
   const [input, setInput] = useState<string>("");
   const [debouncedQuery] = useDebounce(input, 300);
   const { data, isLoading, isFetching } = useSearch(debouncedQuery);
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -39,10 +41,8 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
             item?.productPrice?.toString().includes(input?.toLowerCase()) ||
             item?.productAvailability
               ?.toLowerCase()
-              .includes(input?.toLowerCase()) || 
-            item?.productImage
-              ?.toLowerCase()
-              .includes(input?.toLowerCase())
+              .includes(input?.toLowerCase()) ||
+            item?.productImages?.toLowerCase().includes(input?.toLowerCase())
         )
         .map((item) => ({
           id: item.id,
@@ -56,7 +56,6 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
     [data, input]
   );
 
-
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -66,10 +65,6 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [onClose]);
-
-  useEffect(() => {
-    console.log("API data from useSearch:", data);
-  }, [data]);
 
   const handleSelect = (id: number) => {
     router.push(`/product/${id}`);
@@ -83,11 +78,14 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
   };
 
   useEffect(() => {
-    console.log("Input:", input);
-    console.log("Debounced Query:", debouncedQuery);
-    console.log("API data from useSearch:", data);
-    console.log("Filtered Results:", results);
-  }, [input, debouncedQuery, data, results]);
+    const handleScroll = () => {
+      if (isOpen && isMobile) {
+        onClose();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isOpen, onClose, isMobile]);
 
   return (
     <AnimatePresence>

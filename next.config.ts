@@ -24,6 +24,12 @@ const nextConfig: NextConfig = {
         hostname: "images.axios.com",
         pathname: "**", // Allow all paths under this hostname
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "**", // Allow all paths under this hostname
+      },
+
     ]
   }
 };

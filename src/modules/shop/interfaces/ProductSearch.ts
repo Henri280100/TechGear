@@ -2,9 +2,10 @@ export interface ProductSearchParams {
     id: number;
     productDescription?: string;
     productName?: string;
-    productPrice: number;
+    finalPrice?: number;
     productCategory?: string;
     productAvailability?: string;
     productImage?: string;
+    productTags?: string[];
   }
   

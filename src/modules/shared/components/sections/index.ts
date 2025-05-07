@@ -1,17 +1,17 @@
-export * from "./BestSellersSection";
+export * from "./shop/BestSellersSection";
 export * from "./BestSellersSectionSkeleton";
 
-export * from "./HeroBanner";
-export * from "./TechNewsSection";
+export * from "./marketing/HeroBanner";
+export * from "./marketing/TechNewsSection";
 export * from "./TechNewsSectionSkeleton";
 
-export * from "./ShopSaleSection";
+export * from "./marketing/ShopSaleSection";
 export * from "./ShopSaleSectionSkeleton";
 
-export * from "./FreshArrivalsSection";
+export * from "./shop/FreshArrivalsSection";
 export * from "./FreshArrivalsSectionSkeleton";
 
-export * from "./BestSellersSection";
+export * from "./shop/BestSellersSection";
 export * from "./BestSellersSectionSkeleton";
 
 export * from "./LandingPageSections";
@@ -19,5 +19,5 @@ export * from "./LandingPageSections";
 export * from "./ProductSection";
 export * from "./ProductSectionSkeleton";
 
-export * from "./ComingSoonSection";
+export * from "./marketing/ComingSoonSection";
 export * from "./ComingSoonSectionSkeleton";

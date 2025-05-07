@@ -8,9 +8,9 @@ import {
   CardContent,
   CardFooter,
   CardTitle,
-} from "../ui/card";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+} from "../../ui/card";
+import { Button } from "../../ui/button";
+import { Badge } from "../../ui/badge";
 import { Bell, ChevronRight, Clock, Star } from "lucide-react";
 import { UpComingProductPreview } from "@/modules/shop/interfaces";
 

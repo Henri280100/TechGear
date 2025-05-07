@@ -65,17 +65,17 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
                     {item?.productName || "Product Name"}
                   </Button>
 
-                  {/* <div className="flex items-center gap-2">
-                    {item?.isNew && (
+                  <div className="flex items-center gap-2">
+                    {item?.productTags && (
                       <span className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium shadow-sm">
-                        New
+                        {item?.productTags.join(", ")}
                       </span>
                     )}
-                  </div> */}
+                  </div>
                 </div>
 
                 <p className="text-primary-600 font-bold mb-2">
-                  ${item?.productPrice?.toFixed(2)}
+                  ${item?.finalPrice?.toFixed(2)}
                 </p>
 
                 <p className="text-gray-600 text-sm line-clamp-2 mb-3">

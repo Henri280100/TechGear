@@ -5,9 +5,9 @@ import { Info, Monitor, ShoppingCart } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
-import { FadeInSection } from "../animations";
-import { Button } from "../ui/button";
-import { Skeleton } from "../ui/skeleton";
+import { FadeInSection } from "../../animations";
+import { Button } from "../../ui/button";
+import { Skeleton } from "../../ui/skeleton";
 
 const HeroBanner = () => {
   const [isLoaded, setIsLoaded] = useState(false);

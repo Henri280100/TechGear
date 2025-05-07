@@ -1,3 +1,3 @@
-export * from './LandingPage';
-export * from './ProductListPage';
-export * from './CartPage';
+export * from './landing';
+export * from './product-list';
+export * from './cart';

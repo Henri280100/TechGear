@@ -4,7 +4,7 @@ import useIsMobile from "@/modules/shared/hooks/useIsMobile";
 import { useMobileMenu } from "@/modules/shared/hooks/useMobileMenu";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { ChevronDown } from "lucide-react";
 import {
   Drawer,
@@ -15,15 +15,15 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "../ui/drawer";
-import { ScrollArea } from "../ui/scroll-area";
+} from "../../ui/drawer";
+import { ScrollArea } from "../../ui/scroll-area";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../ui/carousel";
+} from "../../ui/carousel";
 import Link from "next/link";
 import Image from "next/image";
 

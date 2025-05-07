@@ -38,20 +38,24 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
             item?.productCategory
               ?.toLowerCase()
               .includes(input?.toLowerCase()) ||
-            item?.productPrice?.toString().includes(input?.toLowerCase()) ||
+            item?.finalPrice?.toString().includes(input?.toLowerCase()) ||
             item?.productAvailability
               ?.toLowerCase()
               .includes(input?.toLowerCase()) ||
-            item?.productImages?.toLowerCase().includes(input?.toLowerCase())
+            item?.productImages?.toLowerCase().includes(input?.toLowerCase()) ||
+            item?.productTags?.some((tag) =>
+              tag?.toLowerCase().includes(input?.toLowerCase())
+            )
         )
         .map((item) => ({
           id: item.id,
           productDescription: item?.productDescription,
           productName: item?.productName,
-          productPrice: item?.productPrice,
+          finalPrice: item?.finalPrice,
           productCategory: item?.productCategory,
           productAvailability: item?.productAvailability,
           productImage: item?.productImage,
+          productTags: item?.productTags,
         })) ?? [],
     [data, input]
   );

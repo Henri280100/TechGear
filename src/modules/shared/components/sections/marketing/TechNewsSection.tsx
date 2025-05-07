@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { Calendar, ChevronRight, LucideBadgeCheck, Tag } from "lucide-react";
 import { formatDateTime } from "@/app/utils/formatDateTime";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { ITechNews } from "@/modules/shared/interfaces/ITTechNews";
-import { ExpandableContent } from "../ui/expandable-content";
+import { ExpandableContent } from "../../ui/expandable-content";
 
 interface TechNewsSectionProps {
   techNews: ITechNews[];
@@ -79,8 +79,6 @@ function TechNewsSection({
                   quality={index === 0 ? 90 : 75}
                   loading={index === 0 ? "eager" : "lazy"}
                   priority={index === 0}
-                  placeholder="blur"
-                  blurDataURL={news.urlToImage}
                   alt={news.title}
                   className="w-full h-60 object-cover transition-transform duration-700 group-hover:scale-105"
                 />

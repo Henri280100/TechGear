@@ -1,20 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
+import { Button } from "../../ui/button";
+import { Card, CardContent } from "../../ui/card";
+import { Badge } from "../../ui/badge";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from "../ui/carousel";
+} from "../../ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Suspense, useRef } from "react";
 import { Plus } from "lucide-react";
-import FreshArrivalsSectionSkeleton from "./FreshArrivalsSectionSkeleton";
+import FreshArrivalsSectionSkeleton from "../FreshArrivalsSectionSkeleton";
 
 const freshArrivals = [
   {
@@ -80,10 +80,9 @@ export default function FreshArrivalsSection() {
                           quality={index === 0 ? 90 : 75} // 👈 priority to first
                           loading={index === 0 ? "eager" : "lazy"}
                           priority={index === 0}
-                          placeholder="blur"
                           
                           className="w-full h-[400px] object-cover"
-                          blurDataURL={item.image}
+                          
                         />
                         <div className="absolute top-2 right-2">
                           <Button variant="secondary" size="icon">

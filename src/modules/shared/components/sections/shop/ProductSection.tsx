@@ -1,4 +1,16 @@
 import { ProductPreview } from "@/modules/shop/interfaces/IProduct";
+import { Check, ChevronRight, Eye, Heart, ShoppingCart, Star } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { Badge } from "../../ui/badge";
+import { Button } from "../../ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../ui/card";
 import {
   Dialog,
   DialogContent,
@@ -6,26 +18,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Check, ChevronRight, Eye, Heart, ShoppingCart, Star } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+} from "../../ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "../../ui/tooltip";
 
 interface ProductSectionProps {
   title: string;

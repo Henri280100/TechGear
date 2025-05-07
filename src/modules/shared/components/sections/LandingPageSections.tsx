@@ -13,13 +13,13 @@ import Loading from "../ui/Loading";
 import { Separator } from "../ui/separator";
 import { useTechNews } from "../../hooks";
 import { FadeInSection } from "../animations";
-import CategorySection from "./CategorySection";
-import FreshArrivalsSection from "./FreshArrivalsSection";
-import ProductSection from "./ProductSection";
-import BestSellersSection from "./BestSellersSection";
-import ComingSoonSection from "./ComingSoonSection";
-import ShopSaleSection from "./ShopSaleSection";
-import TechNewsSection from "./TechNewsSection";
+import CategorySection from "./shop/CategorySection";
+import FreshArrivalsSection from "./shop/FreshArrivalsSection";
+import ProductSection from "./shop/ProductSection";
+import BestSellersSection from "./shop/BestSellersSection";
+import ComingSoonSection from "./marketing/ComingSoonSection";
+import ShopSaleSection from "./marketing/ShopSaleSection";
+import TechNewsSection from "./marketing/TechNewsSection";
 
 interface LandingPageProps {
   onRefetch?: (refetch: () => void) => void;

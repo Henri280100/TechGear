@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Header from "./Header";
-import HeroBanner from "../sections/HeroBanner";
+import HeroBanner from "../sections/marketing/HeroBanner";
 import Footer from "./Footer";
 import { ReactQueryProvider } from "@/providers";
 

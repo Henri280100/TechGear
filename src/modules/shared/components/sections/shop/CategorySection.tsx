@@ -3,7 +3,7 @@
 import useIsMobile from "@/modules/shared/hooks/useIsMobile";
 import { useMobileMenu } from "@/modules/shared/hooks/useMobileMenu";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { ChevronDown } from "lucide-react";
 import {
@@ -26,114 +26,44 @@ import {
 } from "../../ui/carousel";
 import Link from "next/link";
 import Image from "next/image";
+import { ICategory } from "@/modules/shop/interfaces/ICategory";
+import { useAllCategories } from "@/modules/shop/hooks/useAllCategories";
+import Loading from "../../ui/Loading";
+import ErrorMessage from "../../ui/ErrorMessage";
 
-const categories = [
-  {
-    name: "Laptop",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "PC",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Monitor",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Mainboard",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "CPU",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "VGA",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "RAM",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Storage",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Case",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Cooling",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Power Supply",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Keyboard",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Mouse",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Chair",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Headphones",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Speakers",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Console",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Accessories",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Office Equipment",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    name: "Apple",
-    icon: () => <span className="mr-2">💻</span>,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-];
+interface CategorySectionProps {
+  categoriesData: ICategory[];
+  onRefetch?: (refetch: () => void) => void;
+  onViewMore?: () => void;
+}
 
-export default function CategorySection() {
+const CategorySection = ({
+  onRefetch,
+  onViewMore = () => {},
+}: Readonly<Omit<CategorySectionProps, "categoriesData">>) => {
+  const {
+    refetch,
+    data: categoriesData = [],
+    isLoading,
+    error,
+  } = useAllCategories();
   const [isOpen, setIsOpen] = useState(false);
   const { isMobileMenuOpen } = useMobileMenu();
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (onRefetch) onRefetch(refetch);
+  }, [onRefetch, refetch]);
+
+  if (isLoading) {
+    <Loading />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage message="Failed to load tech news" onRetry={refetch} />
+    );
+  }
 
   return (
     <section>
@@ -181,13 +111,12 @@ export default function CategorySection() {
                   </DrawerDescription>
                 </DrawerHeader>
                 <ScrollArea className="h-[50vh] px-4">
-                  {categories.map((category) => (
+                  {categoriesData.map((category: ICategory) => (
                     <div
-                      key={category.name}
+                      key={category.categoryName}
                       className="flex items-center p-2 hover:bg-muted rounded-lg cursor-pointer"
                     >
-                      {category.icon()}
-                      <span>{category.name}</span>
+                      <span>{category.categoryName}</span>
                     </div>
                   ))}
                 </ScrollArea>
@@ -208,13 +137,13 @@ export default function CategorySection() {
             }}
           >
             <CarouselContent>
-              {categories.map((category) => (
+              {categoriesData.map((category: ICategory) => (
                 <CarouselItem
-                  key={category.name}
+                  key={category.categoryName}
                   className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
                 >
                   <Button variant="outline" size="sm" className="w-full">
-                    {category.name}
+                    {category.categoryName}
                   </Button>
                 </CarouselItem>
               ))}
@@ -233,21 +162,23 @@ export default function CategorySection() {
               Product Categories
             </h1>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-4">
-              {categories.map((category) => (
+              {categoriesData.map((category: ICategory) => (
                 <Link
                   href="#"
-                  key={category.name}
+                  key={category.categoryName}
                   className="flex flex-col items-center group hover:opacity-80 transition-opacity"
                 >
                   <div className="w-16 h-16 sm:w-20 sm:h-20 relative mb-2">
                     <Image
-                      src={category.image || "/placeholder.svg"}
-                      alt={category.name}
+                      src={category.categoryImage || "/placeholder.svg"}
+                      alt={category.categoryName}
                       fill
                       className="object-contain z-10 shadow-md rounded-lg border"
                     />
                   </div>
-                  <span className="text-center text-sm">{category.name}</span>
+                  <span className="text-center text-sm">
+                    {category.categoryName}
+                  </span>
                 </Link>
               ))}
             </div>
@@ -257,3 +188,6 @@ export default function CategorySection() {
     </section>
   );
 }
+
+
+export default memo(CategorySection)

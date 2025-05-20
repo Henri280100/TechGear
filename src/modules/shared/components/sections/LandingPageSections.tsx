@@ -1,25 +1,19 @@
 "use client"; // Since we're using hooks, this needs to be a client component
 
-import {
-  earBuds,
-  gamingKeyboards,
-  gamingLaptops,
-  gamingMice,
-  gamingPCs,
-} from "@/modules/shop/data/products";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useTechNews } from "../../hooks";
+import { FadeInSection } from "../animations";
 import ErrorMessage from "../ui/ErrorMessage";
 import Loading from "../ui/Loading";
 import { Separator } from "../ui/separator";
-import { useTechNews } from "../../hooks";
-import { FadeInSection } from "../animations";
-import CategorySection from "./shop/CategorySection";
-import FreshArrivalsSection from "./shop/FreshArrivalsSection";
-import ProductSection from "./shop/ProductSection";
-import BestSellersSection from "./shop/BestSellersSection";
 import ComingSoonSection from "./marketing/ComingSoonSection";
 import ShopSaleSection from "./marketing/ShopSaleSection";
 import TechNewsSection from "./marketing/TechNewsSection";
+import BestSellersSection from "./shop/BestSellersSection";
+import CategorySection from "./shop/CategorySection";
+import FreshArrivalsSection from "./shop/FreshArrivalsSection";
+import ProductSection from "./shop/ProductSection";
+import ErrorBoundary from "../ui/ErrorBoundary";
 
 interface LandingPageProps {
   onRefetch?: (refetch: () => void) => void;
@@ -38,6 +32,14 @@ export default function LandingPageSection({
     isFetchingNextPage,
   } = useTechNews();
 
+  const [refetchProductList, setRefetchProductList] = useState<
+    (() => void) | null
+  >(null);
+
+  const [refetchCategoryList, setRefetchCategoryList] = useState<
+    (() => void) | null
+  >(null);
+
   useEffect(() => {
     if (onRefetch) onRefetch(refetch);
   }, [onRefetch, refetch]);
@@ -52,65 +54,122 @@ export default function LandingPageSection({
     );
   }
 
+  const handleResetProductList = () => {
+    if (refetchProductList) {
+      refetchProductList();
+    }
+  };
+  const handleResetCategoryList = () => {
+    if (refetchCategoryList) {
+      refetchCategoryList();
+    }
+  };
+
   // Flatten articles from all pages
   const techNews = data?.pages.flatMap((page) => page.articles) ?? [];
 
   return (
-    
-      <div className="container mx-auto px-4 py-8 bg-gray-50">
+    <div className="container mx-auto px-4 py-8 bg-gray-50">
+      <ErrorBoundary
+        fallbackMessage="Something went wrong while loading categories"
+        onReset={handleResetCategoryList}
+      >
         <FadeInSection>
-          <CategorySection />
-        </FadeInSection>
-
-        <Separator className="my-8" />
-
-        <FadeInSection>
-          <FreshArrivalsSection />
-        </FadeInSection>
-
-        <FadeInSection>
-          <ProductSection title="Gaming PCs" products={gamingPCs} />
-        </FadeInSection>
-
-        <FadeInSection>
-          <ProductSection title="Gaming Laptops" products={gamingLaptops} />
-        </FadeInSection>
-
-        <FadeInSection>
-          <ProductSection title="Gaming Mice" products={gamingMice} />
-        </FadeInSection>
-
-        <FadeInSection>
-          <ProductSection title="Gaming Keyboards" products={gamingKeyboards} />
-        </FadeInSection>
-
-        <FadeInSection>
-          <ProductSection title="EarBuds" products={earBuds} />
-        </FadeInSection>
-
-        <Separator className="my-8" />
-        <FadeInSection>
-          <BestSellersSection />
-        </FadeInSection>
-
-        <Separator className="my-8" />
-        <FadeInSection>
-          <ComingSoonSection />
-        </FadeInSection>
-
-        <FadeInSection>
-          <ShopSaleSection />
-        </FadeInSection>
-
-        <FadeInSection>
-          <TechNewsSection
-            techNews={techNews}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+          <CategorySection
+            onRefetch={(categoryRefetch) =>
+              setRefetchCategoryList(() => categoryRefetch)
+            }
           />
         </FadeInSection>
-      </div>
-    
+      </ErrorBoundary>
+
+      <Separator className="my-8" />
+
+      <FadeInSection>
+        <FreshArrivalsSection />
+      </FadeInSection>
+
+      <ErrorBoundary
+        fallbackMessage="Something went wrong while loading products"
+        onReset={handleResetProductList}
+      >
+        <FadeInSection>
+          <ProductSection
+            title="PC"
+            onRefetch={(productRefetch) =>
+              setRefetchProductList(() => productRefetch)
+            }
+          />
+        </FadeInSection>
+
+        <FadeInSection>
+          <ProductSection
+            title="Workstation"
+            onRefetch={(productRefetch) =>
+              setRefetchProductList(() => productRefetch)
+            }
+          />
+        </FadeInSection>
+
+        <FadeInSection>
+          <ProductSection
+            title="Gaming Laptop"
+            onRefetch={(productRefetch) =>
+              setRefetchProductList(() => productRefetch)
+            }
+          />
+        </FadeInSection>
+
+        <FadeInSection>
+          <ProductSection
+            title="Gaming Mice"
+            onRefetch={(productRefetch) =>
+              setRefetchProductList(() => productRefetch)
+            }
+          />
+        </FadeInSection>
+
+        <FadeInSection>
+          <ProductSection
+            title="Gaming Keyboards"
+            onRefetch={(productRefetch) =>
+              setRefetchProductList(() => productRefetch)
+            }
+          />
+        </FadeInSection>
+
+        <FadeInSection>
+          <ProductSection
+            title="EarBuds"
+            onRefetch={(productRefetch) =>
+              setRefetchProductList(() => productRefetch)
+            }
+          />
+        </FadeInSection>
+      </ErrorBoundary>
+
+      <Separator className="my-8" />
+      <FadeInSection>
+        <BestSellersSection />
+      </FadeInSection>
+
+      <Separator className="my-8" />
+      <FadeInSection>
+        <ComingSoonSection />
+      </FadeInSection>
+
+      <FadeInSection>
+        <ShopSaleSection />
+      </FadeInSection>
+
+      <FadeInSection>
+        <TechNewsSection
+          techNews={techNews}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      </FadeInSection>
+    </div>
   );
 }

@@ -1,6 +1,11 @@
 import { backendApiClient } from "@/app/api/config/axiosInstance";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
+/**
+ * Generic reusable GET request function
+ * @param endpoint - API endpoint
+ * @param params - Query params
+ */
 export const getWithQuery = async <T>(
   endpoint: string,
   params?: Record<string, unknown>

@@ -18,6 +18,7 @@ export const gamingPCs: ProductPreview[] = [
       "A powerful gaming PC with the latest NVIDIA graphics card and a large amount of RAM.",
     features: ["RTX 3080", "32GB RAM", "1TB SSD"],
     brand: ["PC R5"],
+    
   },
   {
     productId: 2,

@@ -3,54 +3,72 @@ import { Availability } from "@/constants/enum/Availability";
 export interface IProduct {
   productId: number;
   name: string;
-  productAvailability: Availability; // Availability status (e.g., "In Stock", "Out of Stock")
-  description: string;
+  availability: Availability; // Availability status (e.g., "In Stock", "Out of Stock")
+  productDescription: string;
   features: string[];
-  image: string;
+  imageUrl: string;
   releaseDate: string;
   hype?: number; // Optional property for hype
   daysLeft?: number; // Optional property for days left
   title: string;
   rating: number;
-  price: number;
   maxPrice: number;
   minPrice: number;
   specs: string;
-  category: string; // Category of the product (e.g., "Laptop", "Mouse", etc.)
-  discount: number;
+  category: {
+    categoryId: number;
+    categoryImage: string;
+    categoryName: string;
+  }; // Category of the product (e.g., "Laptop", "Mouse", etc.)
+  discount?: {
+    discountPercentage: number;
+  }[];
   isNew: boolean;
-  colors: string[];
   brand: string[];
   warranty: string;
   stockLevel: number;
+  productDetails?: {
+    price: number;
+    finalPrice: number;
+    colors?: string[];
+    releaseDate: string;
+    dayLeft: number;
+    detailImageUrl: string;
+    warranty: string;
+    productStatus: string;
+    specification: {
+      specName: string;
+      specValue: string;
+      guarantee: string;
+    }[];
+  }[];
 }
 
 export type ProductPreview = Pick<
   IProduct,
   | "productId"
   | "name"
-  | "image"
-  | "price"
+  | "imageUrl"
   | "rating"
   | "specs"
   | "category"
-  | "productAvailability"
+  | "availability"
   | "isNew"
   | "discount"
-  | "colors"
   | "daysLeft"
   | "hype"
-  | "description"
+  | "productDescription"
   | "features"
   | "brand"
+  | "productDetails"
 >;
 
 export type UpComingProductPreview = Pick<
   IProduct,
   | "productId"
   | "name"
-  | "description"
-  | "image"
+  | "productDescription"
+  | "imageUrl"
   | "releaseDate"
   | "daysLeft"
   | "hype"

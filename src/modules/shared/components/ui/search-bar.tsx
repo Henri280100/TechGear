@@ -1,7 +1,7 @@
 "use client";
 
 import { IProductSearch } from "@/modules/shop/interfaces";
-import { ProductSearchParams, ProductSearchResponse } from "@/modules/shop/interfaces/ProductSearch";
+import { ProductSearchParams } from "@/modules/shop/interfaces/ProductSearch";
 import { useDebounce } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,6 @@ import useIsMobile from "../../hooks/useIsMobile";
 import { useSearch } from "../../hooks/useSearch";
 import { Input } from "./input";
 import SearchResultList from "./search-result-list";
-import { UseQueryResult } from "@tanstack/react-query";
 
 interface HeaderSearchBarProps {
   isOpen: boolean;
@@ -26,24 +25,22 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
   const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { data, isLoading, isFetching }: UseQueryResult<ProductSearchResponse, Error> = useSearch(debouncedQuery);
+ const { data, isLoading, isFetching} = useSearch(debouncedQuery);
 
   const results: ProductSearchParams[] = useMemo(() => {
     if (!data?.product) return [];
-
-    return data.product.map(
-        (item: IProductSearch): ProductSearchParams => ({
-          id: item.id,
-          productDescription: item.productDescription,
-          productName: item.productName,
-          finalPrice: item.finalPrice,
-          productCategory: item.productCategory,
-          productAvailability: item.productAvailability,
-          productImage: item.productImage,
-          productTags: item.productTags,
-        })
-      );
+    return data.product.map((item: IProductSearch): ProductSearchParams => ({
+      id: item.id,
+      productDescription: item.productDescription,
+      productName: item.productName,
+      finalPrice: item.finalPrice,
+      productCategory: item.productCategory,
+      productAvailability: item.productAvailability,
+      productImage: item.productImage,
+      productTags: item.productTags,
+    }));
   }, [data]);
+
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -98,10 +95,10 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
           {(isLoading || isFetching) && (
             <p className="text-sm text-muted-foreground">Searching...</p>
           )}
-          {data?.product?.length === 0 && debouncedQuery && (
+          {debouncedQuery && data?.product?.length === 0 && (
             <p className="text-sm text-destructive">No results found.</p>
           )}
-          {!isFetching && results.length > 0 && (
+          {!isFetching && debouncedQuery && results.length > 0 && (
             <SearchResultList results={results} onSelect={handleSelect} />
           )}
         </motion.div>

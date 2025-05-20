@@ -1,16 +1,15 @@
 "use client";
 
+import { formatAvailability } from "@/app/utils/formatAvailability";
 import { useAllProducts } from "@/modules/shop/hooks/useAllProducts";
 import { ProductPreview } from "@/modules/shop/interfaces/IProduct";
-import { useProductStore } from "@/modules/shop/store/useProductStore";
 import { Check, ChevronRight, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
@@ -25,7 +24,6 @@ import ErrorMessage from "../../ui/ErrorMessage";
 import Loading from "../../ui/Loading";
 import ProductCard from "../../ui/product-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
-import { formatAvailability } from "@/app/utils/formatAvailability";
 
 interface ProductSectionProps {
   title: string;
@@ -46,77 +44,86 @@ const ProductSection = React.memo(
      * Fetches all products with loading and error states.
      * @returns {Object} - Contains products array, loading state, and error state.
      */
-    const { refetch, data: products = { getAllProducts: [] }, isLoading, error } = useAllProducts();
+    const {
+      refetch,
+      data: products = { getAllProducts: [] },
+      isLoading,
+      error,
+    } = useAllProducts();
 
     /**
      * State to toggle the display of all brands.
      */
     const [showAllBrands, setShowAllBrands] = useState(false);
+    const [activeBrand, setActiveBrand] = useState("all");
 
     /**
      * Destructures product store for preview and brand management.
      */
-    const { previewProduct, setPreviewProduct, activeBrand, setActiveBrand } =
-      useProductStore();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [previewProduct, setPreviewProduct] = useState<ProductPreview | null>(
+      null
+    );
 
     /**
      * Ref for section div element.
      */
     const sectionRef = useRef<HTMLDivElement>(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Memoized brand extraction
     const brands = useMemo(() => {
-    const brandSet: Set<string> = new Set(["all"]);
-    products?.getAllProducts
-      ?.filter((product: ProductPreview) =>
-        product.category?.categoryName
-          ? product.category.categoryName.toLowerCase() === title.toLowerCase()
-          : false
-      )
-      .forEach((product: ProductPreview) => {
-        if (product.brand) {
-          if (Array.isArray(product.brand)) {
-            product.brand.forEach((b: string) => {
-              if (b) {
-                brandSet.add(b);
-              }
-            });
-          } else {
-            brandSet.add(product.brand);
+      const brandSet: Set<string> = new Set(["all"]);
+      products?.getAllProducts
+        ?.filter((product: ProductPreview) =>
+          product.category?.categoryName
+            ? product.category.categoryName.toLowerCase() ===
+              title.toLowerCase()
+            : false
+        )
+        .forEach((product: ProductPreview) => {
+          if (product.brand) {
+            if (Array.isArray(product.brand)) {
+              product.brand.forEach((b: string) => {
+                if (b) {
+                  brandSet.add(b);
+                }
+              });
+            } else {
+              brandSet.add(product.brand);
+            }
           }
-        }
-      });
-    return Array.from(brandSet);
-  }, [products, title]);
+        });
+      return Array.from(brandSet);
+    }, [products, title]);
 
-  const displayedBrands = showAllBrands ? brands : brands.slice(0, 5);
+    const displayedBrands = showAllBrands ? brands : brands.slice(0, 5);
 
-  const filteredProducts = useMemo(() => {
-    return products?.getAllProducts
-      ?.filter((product: ProductPreview) =>
-        product.category?.categoryName
-          ? product.category.categoryName.toLowerCase() === title.toLowerCase()
-          : false
-      )
-      .filter((product: ProductPreview) =>
-        activeBrand === "all"
-          ? true
-          : product.brand
-          ? Array.isArray(product.brand)
-            ? product.brand.includes(activeBrand)
-            : product.brand === activeBrand
-          : false
-      ) ?? [];
-  }, [title, activeBrand, products]);
+    // Filter products based on the local activeBrand
+    const filteredProducts = useMemo(() => {
+      return (
+        products?.getAllProducts
+          ?.filter((product: ProductPreview) =>
+            product.category?.categoryName
+              ? product.category.categoryName.toLowerCase() ===
+                title.toLowerCase()
+              : false
+          )
+          .filter((product: ProductPreview) =>
+            activeBrand === "all"
+              ? true
+              : product.brand
+              ? Array.isArray(product.brand)
+                ? product.brand.includes(activeBrand)
+                : product.brand === activeBrand
+              : false
+          ) ?? []
+      );
+    }, [title, activeBrand, products]);
 
-    const handlePreview = useCallback(
-      (product: ProductPreview) => {
-        setPreviewProduct(product);
-        setIsDialogOpen(true);
-      },
-      [setPreviewProduct]
-    );
+    const handlePreview = (product: ProductPreview) => {
+      setPreviewProduct(product);
+      setIsDialogOpen(true);
+    };
 
     // Intersection Observer for lazy loading
     useEffect(() => {

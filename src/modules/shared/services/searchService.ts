@@ -8,16 +8,19 @@ export const searchService = async (
 ): Promise<ProductSearchResponse> => {
   const trimmedQuery = query?.trim().toLowerCase() ?? '';
 
-  // 🔁 Early return if empty string
-  if (!trimmedQuery) return {product: []};
-
   try {
-    const data = await getRequest<ProductSearchParams[]>(
+    const response = await getRequest<{ product: ProductSearchParams[] }>(
       backendApiClient,
       "/product/search",
-      { query: trimmedQuery }
+      trimmedQuery ? { query: trimmedQuery } : {} // Empty object for all products
     );
-    const mappedData: IProductSearch[] = (data ?? []).map((item) => ({
+    const data = response?.product ?? []; // Extract the product array from the json property
+    if (!Array.isArray(data)) {
+      console.warn("Unexpected response format, expected product array:", response);
+      return { product: [] };
+    }
+    console.log("Response:", response?.product);
+    const mappedData: IProductSearch[] = data.map((item) => ({
       id: item.id,
       productName: item.productName ?? "",
       productDescription: item.productDescription ?? "",
@@ -26,11 +29,11 @@ export const searchService = async (
       productImage: item.productImage ?? "",
       productTags: item.productTags ?? [],
       finalPrice: item.finalPrice ?? 0,
-      productImages: item.productImage ? [item.productImage] : [],
     }));
+    console.log("Data: ", data);
     return { product: mappedData };
   } catch (error) {
     console.error("Search error:", error);
-    return {product: []};
+    return { product: [] };
   }
 };

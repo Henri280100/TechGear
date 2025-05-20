@@ -17,7 +17,7 @@ export default function Header() {
   const { toggleMobileMenu } = useMobileMenu();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
-  const [scrollY, setScrollY] = useState(0);
+  // const [scrollY, setScrollY] = useState(0);
 
   const isCartPage = pathname.startsWith("/shop/cart");
 
@@ -36,7 +36,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      // setScrollY(window.scrollY);
       setIsAtTop(window.scrollY <= 50);
     };
     window.addEventListener("scroll", handleScroll);

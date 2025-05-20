@@ -1,6 +1,7 @@
 "use client";
 
-import { ProductSearchParams } from "@/modules/shop/interfaces/ProductSearch";
+import { IProductSearch } from "@/modules/shop/interfaces";
+import { ProductSearchParams, ProductSearchResponse } from "@/modules/shop/interfaces/ProductSearch";
 import { useDebounce } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -9,6 +10,7 @@ import useIsMobile from "../../hooks/useIsMobile";
 import { useSearch } from "../../hooks/useSearch";
 import { Input } from "./input";
 import SearchResultList from "./search-result-list";
+import { UseQueryResult } from "@tanstack/react-query";
 
 interface HeaderSearchBarProps {
   isOpen: boolean;
@@ -21,44 +23,27 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
 }) => {
   const [input, setInput] = useState<string>("");
   const [debouncedQuery] = useDebounce(input, 300);
-  const { data, isLoading, isFetching } = useSearch(debouncedQuery);
   const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { data, isLoading, isFetching }: UseQueryResult<ProductSearchResponse, Error> = useSearch(debouncedQuery);
 
-  const results: ProductSearchParams[] = useMemo(
-    () =>
-      data?.product
-        .filter(
-          (item) =>
-            item?.productName?.toLowerCase().includes(input?.toLowerCase()) ||
-            item?.productDescription
-              ?.toLowerCase()
-              .includes(input?.toLowerCase()) ||
-            item?.productCategory
-              ?.toLowerCase()
-              .includes(input?.toLowerCase()) ||
-            item?.finalPrice?.toString().includes(input?.toLowerCase()) ||
-            item?.productAvailability
-              ?.toLowerCase()
-              .includes(input?.toLowerCase()) ||
-            item?.productImages?.toLowerCase().includes(input?.toLowerCase()) ||
-            item?.productTags?.some((tag) =>
-              tag?.toLowerCase().includes(input?.toLowerCase())
-            )
-        )
-        .map((item) => ({
+  const results: ProductSearchParams[] = useMemo(() => {
+    if (!data?.product) return [];
+
+    return data.product.map(
+        (item: IProductSearch): ProductSearchParams => ({
           id: item.id,
-          productDescription: item?.productDescription,
-          productName: item?.productName,
-          finalPrice: item?.finalPrice,
-          productCategory: item?.productCategory,
-          productAvailability: item?.productAvailability,
-          productImage: item?.productImage,
-          productTags: item?.productTags,
-        })) ?? [],
-    [data, input]
-  );
+          productDescription: item.productDescription,
+          productName: item.productName,
+          finalPrice: item.finalPrice,
+          productCategory: item.productCategory,
+          productAvailability: item.productAvailability,
+          productImage: item.productImage,
+          productTags: item.productTags,
+        })
+      );
+  }, [data]);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {

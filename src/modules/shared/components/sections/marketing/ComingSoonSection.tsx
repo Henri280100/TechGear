@@ -18,24 +18,24 @@ const upcomingProducts = [
   {
     productId: 1,
     name: "Smart Fitness Tracker",
-    description: "Track your health and fitness with our latest smart device.",
-    image: "/placeholder.svg?height=150&width=150",
+    productDescription: "Track your health and fitness with our latest smart device.",
+    imageUrl: "/placeholder.svg?height=150&width=150",
     releaseDate: "Coming in June",
   },
   {
     productId: 2,
     name: "Eco-Friendly Water Bottle",
-    description:
+    productDescription:
       "Stay hydrated and eco-conscious with our new insulated bottle.",
-    image: "/placeholder.svg?height=150&width=150",
+    imageUrl: "/placeholder.svg?height=150&width=150",
     releaseDate: "Available in July",
   },
   {
     productId: 3,
     name: "Wireless Charging Pad",
-    description:
+    productDescription:
       "Charge multiple devices at once with our sleek, fast-charging pad.",
-    image: "/placeholder.svg?height=150&width=150",
+    imageUrl: "/placeholder.svg?height=150&width=150",
     releaseDate: "Coming in August",
   },
 ];
@@ -56,7 +56,7 @@ const ComingSoonCard = ({ product }: { product: UpComingProductPreview }) => {
             transition={{ duration: 0.4 }}
           >
             <Image
-              src={product.image || "/placeholder.svg"}
+              src={product.imageUrl || "/placeholder.svg"}
               alt={product.name}
               width={500}
               height={300}
@@ -81,7 +81,7 @@ const ComingSoonCard = ({ product }: { product: UpComingProductPreview }) => {
           {product.name}
         </CardTitle>
         <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-          {product.description}
+          {product.productDescription}
         </p>
         <div className="flex items-center justify-between">
           <Badge

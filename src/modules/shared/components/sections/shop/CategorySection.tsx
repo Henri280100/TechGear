@@ -39,11 +39,10 @@ interface CategorySectionProps {
 
 const CategorySection = ({
   onRefetch,
-  onViewMore = () => {},
 }: Readonly<Omit<CategorySectionProps, "categoriesData">>) => {
   const {
     refetch,
-    data: categoriesData = [],
+    data: categoriesData = { getAllCategories: [] },
     isLoading,
     error,
   } = useAllCategories();
@@ -111,7 +110,7 @@ const CategorySection = ({
                   </DrawerDescription>
                 </DrawerHeader>
                 <ScrollArea className="h-[50vh] px-4">
-                  {categoriesData.map((category: ICategory) => (
+                  {categoriesData.getAllCategories.map((category: ICategory) => (
                     <div
                       key={category.categoryName}
                       className="flex items-center p-2 hover:bg-muted rounded-lg cursor-pointer"
@@ -137,7 +136,7 @@ const CategorySection = ({
             }}
           >
             <CarouselContent>
-              {categoriesData.map((category: ICategory) => (
+              {categoriesData.getAllCategories.map((category: ICategory) => (
                 <CarouselItem
                   key={category.categoryName}
                   className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
@@ -162,7 +161,7 @@ const CategorySection = ({
               Product Categories
             </h1>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-4">
-              {categoriesData.map((category: ICategory) => (
+              {categoriesData.getAllCategories.map((category: ICategory) => (
                 <Link
                   href="#"
                   key={category.categoryName}
@@ -187,7 +186,6 @@ const CategorySection = ({
       )}
     </section>
   );
-}
+};
 
-
-export default memo(CategorySection)
+export default memo(CategorySection);

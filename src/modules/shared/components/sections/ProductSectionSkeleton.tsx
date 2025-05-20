@@ -12,6 +12,7 @@ export default function ProductSectionSkeleton({
   return (
     <div className="space-y-4">
       {/* Title */}
+      <h2 className="text-2xl font-bold">{title}</h2>
       <Skeleton className="w-1/4 h-8" />
 
       {/* Product Grid */}

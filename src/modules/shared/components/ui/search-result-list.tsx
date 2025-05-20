@@ -29,13 +29,13 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
             key={item?.id}
             className="border border-gray-200 rounded-lg p-5 hover:shadow-lg transition-all duration-300 bg-white group relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden">
+            {/* <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden">
               {item?.isNew && (
                 <div className="bg-primary-500 text-white text-xs font-bold px-4 py-1 text-center transform rotate-45 translate-y-5 translate-x-2 shadow-md">
                   NEW
                 </div>
               )}
-            </div>
+            </div> */}
             <div className="flex flex-col md:flex-row gap-4">
               <div className="w-full md:w-[120px] flex-shrink-0">
                 <div className="relative rounded-md overflow-hidden border border-gray-100 bg-gray-50 h-[120px] group-hover:scale-105 transition-transform duration-300">

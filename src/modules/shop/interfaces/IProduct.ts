@@ -44,6 +44,21 @@ export interface IProduct {
   }[];
 }
 
+export interface GetAllProductsResponse {
+  getAllProducts: IProduct[];
+}
+
+export interface IProductSearch {
+  id: number;
+  productName: string;
+  productDescription: string;
+  productCategory: string;
+  productAvailability: string;
+  productTags: string[];
+  finalPrice: number;
+  productImage: string;
+}
+
 export type ProductPreview = Pick<
   IProduct,
   | "productId"
@@ -61,7 +76,11 @@ export type ProductPreview = Pick<
   | "features"
   | "brand"
   | "productDetails"
->;
+> & {minPrice: number; maxPrice: number};
+
+export interface GetAllProductPreviewResponse {
+  getAllProducts: ProductPreview[];
+}
 
 export type UpComingProductPreview = Pick<
   IProduct,

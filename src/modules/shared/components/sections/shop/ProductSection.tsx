@@ -46,7 +46,7 @@ const ProductSection = React.memo(
      * Fetches all products with loading and error states.
      * @returns {Object} - Contains products array, loading state, and error state.
      */
-    const { refetch, data: products = [], isLoading, error } = useAllProducts();
+    const { refetch, data: products = { getAllProducts: [] }, isLoading, error } = useAllProducts();
 
     /**
      * State to toggle the display of all brands.
@@ -67,51 +67,48 @@ const ProductSection = React.memo(
 
     // Memoized brand extraction
     const brands = useMemo(() => {
-      const brandSet: Set<string> = new Set(["all"]);
-      products
-        .filter((product: ProductPreview) =>
-          product.category?.categoryName
-            ? product.category.categoryName.toLowerCase() ===
-              title.toLowerCase()
-            : false
-        )
-        .forEach((product: ProductPreview) => {
-          if (product.brand) {
-            if (Array.isArray(product.brand)) {
-              product.brand.forEach((b: string) => {
-                if (b) {
-                  brandSet.add(b);
-                }
-              });
-            } else {
-              brandSet.add(product.brand);
-            }
+    const brandSet: Set<string> = new Set(["all"]);
+    products?.getAllProducts
+      ?.filter((product: ProductPreview) =>
+        product.category?.categoryName
+          ? product.category.categoryName.toLowerCase() === title.toLowerCase()
+          : false
+      )
+      .forEach((product: ProductPreview) => {
+        if (product.brand) {
+          if (Array.isArray(product.brand)) {
+            product.brand.forEach((b: string) => {
+              if (b) {
+                brandSet.add(b);
+              }
+            });
+          } else {
+            brandSet.add(product.brand);
           }
-        });
-      return Array.from(brandSet);
-    }, [products, title]);
+        }
+      });
+    return Array.from(brandSet);
+  }, [products, title]);
 
-    const displayedBrands = showAllBrands ? brands : brands.slice(0, 5);
+  const displayedBrands = showAllBrands ? brands : brands.slice(0, 5);
 
-    // Filter products by category (title) and brand
-    const filteredProducts = useMemo(() => {
-      return products
-        .filter((product: ProductPreview) =>
-          product.category?.categoryName
-            ? product.category.categoryName.toLowerCase() ===
-              title.toLowerCase()
-            : false
-        )
-        .filter((product: ProductPreview) =>
-          activeBrand === "all"
-            ? true
-            : product.brand
-            ? Array.isArray(product.brand)
-              ? product.brand.includes(activeBrand)
-              : product.brand === activeBrand
-            : false
-        );
-    }, [title, activeBrand, products]);
+  const filteredProducts = useMemo(() => {
+    return products?.getAllProducts
+      ?.filter((product: ProductPreview) =>
+        product.category?.categoryName
+          ? product.category.categoryName.toLowerCase() === title.toLowerCase()
+          : false
+      )
+      .filter((product: ProductPreview) =>
+        activeBrand === "all"
+          ? true
+          : product.brand
+          ? Array.isArray(product.brand)
+            ? product.brand.includes(activeBrand)
+            : product.brand === activeBrand
+          : false
+      ) ?? [];
+  }, [title, activeBrand, products]);
 
     const handlePreview = useCallback(
       (product: ProductPreview) => {

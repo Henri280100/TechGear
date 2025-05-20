@@ -16,7 +16,7 @@ export * from "./BestSellersSectionSkeleton";
 
 export * from "./LandingPageSections";
 
-export * from "./ProductSection";
+export * from "./shop//ProductSection";
 export * from "./ProductSectionSkeleton";
 
 export * from "./marketing/ComingSoonSection";
